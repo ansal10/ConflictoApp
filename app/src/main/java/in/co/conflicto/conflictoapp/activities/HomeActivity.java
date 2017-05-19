@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import in.co.conflicto.conflictoapp.R;
+import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.adapters.HomeTabsPagerAdapter;
 import in.co.conflicto.conflictoapp.fragments.AllPostFragment;
@@ -94,8 +95,8 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        Toast.makeText(this, item.details, Toast.LENGTH_LONG).show();
+    public void onListFragmentInteraction(Post post) {
+
     }
 }
 

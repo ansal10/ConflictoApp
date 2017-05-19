@@ -1,7 +1,9 @@
 package in.co.conflicto.conflictoapp.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +17,7 @@ import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.PostItemRecyclerViewAdapter;
 import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent;
 import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent.DummyItem;
+import in.co.conflicto.conflictoapp.models.Post;
 
 /**
  * A fragment representing a list of Items.
@@ -25,6 +28,8 @@ import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent.DummyItem;
 public class AllPostFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
+    private Activity activity;
+    private PostItemRecyclerViewAdapter postAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -43,6 +48,12 @@ public class AllPostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.activity = this.getActivity();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
     }
 
@@ -56,7 +67,8 @@ public class AllPostFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new PostItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener);
+            recyclerView.setAdapter(postAdapter);
         }
         return view;
     }
@@ -87,6 +99,6 @@ public class AllPostFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Post post);
     }
 }

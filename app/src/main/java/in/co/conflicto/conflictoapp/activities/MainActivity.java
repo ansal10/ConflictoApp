@@ -76,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if (accessToken !=null){
+            handleFacebookAccessToken(accessToken);
+        }
     }
 
     @Override
