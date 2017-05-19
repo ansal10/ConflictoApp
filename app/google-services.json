@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1036682110495",
+    "firebase_url": "https://conflicto-debed.firebaseio.com",
+    "project_id": "conflicto-debed",
+    "storage_bucket": "conflicto-debed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036682110495:android:806280aab6a58a8c",
+        "android_client_info": {
+          "package_name": "in.co.conflicto.conflictoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036682110495-29bjkbt3k5jhiq0hkl6ej8f1lbtipdtc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR39RsohA7arsR7jlTbmCPYTQ9KdnnVWU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

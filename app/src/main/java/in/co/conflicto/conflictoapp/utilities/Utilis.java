@@ -1,4 +1,4 @@
-package in.co.conflicto.conflictoapp;
+package in.co.conflicto.conflictoapp.utilities;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -21,8 +21,11 @@ public class Utilis {
         }
     }
 
-    public static void exception(Exception ex){
-        Log.e("EXC", Arrays.toString(ex.getStackTrace()));
+    public static void exc( String tag, Exception e){
+        Log.e(tag, "Exception: "+Log.getStackTraceString(e));
+        Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show();
     }
+
+
 
 }
