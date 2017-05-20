@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
     private void processFirebaseAuthenticationToBackend() {
         JSONObject js = new JSONObject();
         try {
+            UIUtils.showLoader(activity);
             JSONObject fb_token = new JSONObject(new ObjectMapper().writeValueAsString(accessToken));
             js.put("firebase_id", FirebaseAuth.getInstance().getCurrentUser().getUid());
             js.put("fb_token", fb_token.getString("token"));
@@ -125,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
             js.put("fcm_token", SessionData.getString(Constants.FCM_TOKEN, ""));
 
             RequestQueue requestQueue = VolleySingelton.getInstance().getRequestQueue();
-            UIUtils.showLoader(activity);
             JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.POST, Constants.SERVER_URL + "/user/authenticate", js,
                 (JSONObject response) -> {
                     try {
@@ -147,8 +147,10 @@ public class MainActivity extends AppCompatActivity {
             requestQueue.add(request);
 
             } catch (JSONException e) {
+                UIUtils.showLoader(activity);
                 Utilis.exc("firebase", e);
             } catch (JsonProcessingException e) {
+                UIUtils.showLoader(activity);
                 Utilis.exc("jackson", e);
             }
 
