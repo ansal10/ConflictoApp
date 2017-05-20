@@ -24,6 +24,7 @@ import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.activities.HomeActivity;
 import in.co.conflicto.conflictoapp.fragments.AllPostFragment.OnListFragmentInteractionListener;
 import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent.DummyItem;
+import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.DownloadImageTask;
@@ -50,11 +51,13 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
     private final Activity activity;
     private Integer page = 0;
     private Boolean allPostLoaded = false;
+    private PostFragmentListener fragmentListener;
 
-    public PostItemRecyclerViewAdapter(Activity activity, OnListFragmentInteractionListener listener) {
+    public PostItemRecyclerViewAdapter(Activity activity, OnListFragmentInteractionListener listener, PostFragmentListener fragmentListener) {
         posts = new LinkedList<>();
         mListener = listener;
         this.activity = activity;
+        this.fragmentListener = fragmentListener;
         this.loadPosts();
     }
 
@@ -76,7 +79,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         holder.mLikesView.setText(post.likes +"");
         holder.mDislikeView.setText(post.dislikes+ "");
         holder.mEndorseView.setText(post.endorse+"");
-        holder.mConflictView.setText(post.conflicts+"Conflicts");
+        holder.mConflictView.setText(post.conflicts+" Conflicts");
         holder.mSupportView.setText(post.supports+" Supports");
 
         holder.mView.setOnClickListener(v -> {
@@ -107,6 +110,13 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
+    }
+
+    public void refresh() {
+        this.allPostLoaded = false;
+        this.page = 0;
+        this.posts.clear();
+        loadPosts();
     }
 
 
@@ -145,7 +155,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
     public void loadPosts(){
         if (!this.allPostLoaded) {
             RequestQueue queue = VolleySingelton.getInstance().getRequestQueue();
-            UIUtils.showLoader(activity);
+            fragmentListener.refreshStarted();
             JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.GET, Constants.SERVER_URL + "/post", null,
                 (JSONObject response) -> {
                     try {
@@ -158,16 +168,24 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
                         if (arr.length() < 25) {
                             this.allPostLoaded = true;
                         }
+                        fragmentListener.refreshCompleted();
 
 
                     } catch (JSONException e) {
                         Utilis.exc("volley", e);
+                        fragmentListener.refreshCompleted();
+
                     }
                     UIUtils.hideLoader(activity);
+                    fragmentListener.refreshCompleted();
+
                 }, (VolleyError error) -> {
+
                     UIUtils.hideLoader(activity);
+                    fragmentListener.refreshCompleted();
+
                     Utilis.exc("volley", error);
-            });
+                });
 
             queue.add(request);
 

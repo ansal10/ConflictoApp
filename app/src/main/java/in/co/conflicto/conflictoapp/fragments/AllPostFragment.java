@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.PostItemRecyclerViewAdapter;
 import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent;
 import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent.DummyItem;
+import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Post;
 
 /**
@@ -25,11 +27,13 @@ import in.co.conflicto.conflictoapp.models.Post;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class AllPostFragment extends Fragment {
+public class AllPostFragment extends Fragment implements PostFragmentListener {
 
     private OnListFragmentInteractionListener mListener;
+    private PostFragmentListener postFragmentListener;
     private Activity activity;
     private PostItemRecyclerViewAdapter postAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -60,28 +64,46 @@ public class AllPostFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_item_list, container, false);
 
         // Set the adapter
-        Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        Context context = mSwipeRefreshLayout.getContext();
+        RecyclerView recyclerView = (RecyclerView) mSwipeRefreshLayout.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener);
+        this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener, postFragmentListener);
         recyclerView.setAdapter(postAdapter);
-        return view;
+
+        mSwipeRefreshLayout.setOnRefreshListener( () -> {
+            this.postAdapter.refresh();
+        });
+
+        return mSwipeRefreshLayout;
     }
+
+
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mListener = (OnListFragmentInteractionListener) context;
+        postFragmentListener = this;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void refreshCompleted() {
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void refreshStarted() {
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
 
@@ -98,5 +120,8 @@ public class AllPostFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Post post);
+
     }
 }
+
+
