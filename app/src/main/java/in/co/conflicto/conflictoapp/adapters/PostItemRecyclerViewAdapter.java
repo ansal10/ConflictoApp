@@ -61,7 +61,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.post_item, parent, false);
+                .inflate(R.layout.post_item_2, parent, false);
         return new ViewHolder(view);
     }
 
@@ -73,12 +73,11 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         holder.mProfileNameView.setText(post.user.name);
         holder.mPostTitleView.setText(post.title);
         holder.mPostDescriptionView.setText(post.description);
-        holder.mLikesView.setText(post.likes.toString());
-        holder.mDislikeView.setText(post.dislikes.toString());
-        holder.mEndorseView.setText(post.endorse.toString());
-        holder.mCommentView.setText("9");
-        holder.mConflictView.setText(post.conflicts.toString());
-        holder.mSupportView.setText(post.supports.toString());
+        holder.mLikesView.setText(post.likes +"");
+        holder.mDislikeView.setText(post.dislikes+ "");
+        holder.mEndorseView.setText(post.endorse+"");
+        holder.mConflictView.setText(post.conflicts+"Conflicts");
+        holder.mSupportView.setText(post.supports+" Supports");
 
         holder.mView.setOnClickListener(v -> {
             if (mListener != null) {
@@ -121,7 +120,6 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         public final TextView mLikesView ;
         public final TextView mDislikeView ;
         public final TextView mEndorseView ;
-        public final TextView mCommentView ;
         public final TextView mConflictView ;
         public final TextView mSupportView ;
         public final ImageView mDPImageView ;
@@ -135,9 +133,8 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
             mPostTitleView = (TextView) view.findViewById(R.id.post_title_id);
             mPostDescriptionView = (TextView) view.findViewById(R.id.post_description_id);
             mLikesView = (TextView) view.findViewById(R.id.likes_id);
-            mDislikeView = (TextView) view.findViewById(R.id.dislike_id);
+            mDislikeView = (TextView) view.findViewById(R.id.dislikes_id);
             mEndorseView = (TextView) view.findViewById(R.id.endorse_id);
-            mCommentView = (TextView) view.findViewById(R.id.comment_id);
             mConflictView = (TextView) view.findViewById(R.id.conflict_id);
             mSupportView = (TextView) view.findViewById(R.id.support_id);
             mDPImageView = (ImageView) view.findViewById(R.id.dp_id);
