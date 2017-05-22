@@ -36,6 +36,7 @@ import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.models.User;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
+import in.co.conflicto.conflictoapp.utilities.MyApplication;
 import in.co.conflicto.conflictoapp.utilities.SessionData;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                         user.firebaseId = response.getJSONObject("userprofile").getString("firebase_id");
                         user.uuid = response.getJSONObject("userprofile").getString("uuid");
                         SessionData.currentUser = user;
+                        MyApplication.getInstance().saveCurrentUser(SessionData.currentUser);
 
 
                     } catch (JSONException e) {

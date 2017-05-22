@@ -236,6 +236,27 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
         }
     }
 
+    public void commentUpdated(Comment comment) {
+        for (int i = 0 ; i < comments.size() ; i++){
+            if(comments.get(i).uuid.equals(comment.uuid)){
+                comments.set(i, comment);
+                this.notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+    public void commentDeleted(Comment comment) {
+        for (int i = 0 ; i < comments.size() ; i++){
+            if(comments.get(i).uuid.equals(comment.uuid)) {
+                comments.remove(i);
+                this.notifyDataSetChanged();
+                break;
+            }
+        }
+
+    }
+
     public interface CommentAdapterListener{
         void popupCommentEdit(Comment comment);
     }

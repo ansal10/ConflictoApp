@@ -22,4 +22,6 @@ public class Constants {
     public static final String BUILD_VERSION = "build_version";
     public static final String TIMEZONE = "timezone";
     public static final String USER_UUID = "user_uuid";
+    public static final String SHARED_PREFERENCE_CURRENT_USER = "shared_preference_current_user";
+
 }

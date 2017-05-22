@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import in.co.conflicto.conflictoapp.R;
+import in.co.conflicto.conflictoapp.activities.PostDetailsActivity;
 import in.co.conflicto.conflictoapp.models.Comment;
 import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
@@ -38,15 +39,17 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
     private Button conflictButton;
     private Button supportButton;
     private EditText commentBox;
+    private PostDetailsActivity activity;
     String postUUID;
     Post post;
     Comment comment;
 
 
-    public static CommentDialogFragment newInstance(String postUUID, Comment comment) {
+    public static CommentDialogFragment newInstance(PostDetailsActivity activity, String postUUID, Comment comment) {
         CommentDialogFragment fragment = new CommentDialogFragment();
         fragment.postUUID = postUUID;
         fragment.comment = comment;
+        fragment.activity = activity;
         return fragment;
     }
 
@@ -142,6 +145,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.DELETE, Constants.SERVER_URL+ "/comment/" + comment.uuid , null,
             response -> {
                 dismiss();
+                activity.commentDeleted(comment);
                 Toast.makeText(MyApplication.getInstance(), "Comment Deleted Successfully", Toast.LENGTH_SHORT).show();
 
             }, error -> {
@@ -152,17 +156,25 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
 
     public void updateComment(Comment comment){
         JSONObject js = new JSONObject();
+        final String cm = commentBox.getText().toString();
         try {
-            js.put("comment", commentBox.getText().toString() );
+            js.put("comment",  cm );
         } catch (JSONException e) {
             Utilis.exc("json", e);
         }
         JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.PUT, Constants.SERVER_URL+ "/comment/" + comment.uuid , js,
                 response -> {
+                    comment.comment = cm;
                     dismiss();
+                    activity.commentUpdated(comment);
                     Toast.makeText(MyApplication.getInstance(), "Comment Updated Successfully", Toast.LENGTH_SHORT).show();
                 }, error -> Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show());
         VolleySingelton.getInstance().getRequestQueue().add(request);
 
+    }
+
+    public interface DialogBoxListenerInterface{
+        public void commentUpdated(Comment comment);
+        public void commentDeleted(Comment comment);
     }
 }

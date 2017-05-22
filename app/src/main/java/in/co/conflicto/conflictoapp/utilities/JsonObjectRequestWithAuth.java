@@ -26,6 +26,9 @@ public class JsonObjectRequestWithAuth extends JsonObjectRequest {
         headers.putAll(super.getHeaders());
 
         // add headers <key,value>
+        if(SessionData.currentUser == null){
+            SessionData.currentUser = MyApplication.getInstance().retrieveCurrentUser();
+        }
         String credentials = SessionData.currentUser.uuid + ":";
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
         headers.put("Authorization", auth);

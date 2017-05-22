@@ -24,4 +24,12 @@ public class User {
             Utilis.exc("models", e);
         }
     }
+
+    public User(String name, String dpLink, String uuid, String fcmToken, String firebaseId) {
+        this.name = name;
+        this.dpLink = dpLink;
+        this.uuid = uuid;
+        this.fcmToken = fcmToken;
+        this.firebaseId = firebaseId;
+    }
 }
