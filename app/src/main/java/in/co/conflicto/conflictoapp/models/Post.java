@@ -1,8 +1,14 @@
 package in.co.conflicto.conflictoapp.models;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,14 +55,39 @@ public class Post {
             this.reactions = new ArrayList<>();
             this.user = new User(obj.getJSONObject("user").getJSONObject("fbprofile"));
 
-            for (int i = 0 ; i < obj.getJSONArray("tags").length(); i++)
-                this.tags.add(obj.getJSONArray("tags").optString(i));
+            this.tags = new ObjectMapper().readValue(obj.getString("tags"), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+            this.reactions = new ObjectMapper().readValue(obj.getString("reactions"), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
 
-            for (int i = 0 ; i < obj.getJSONArray("reactions").length(); i++)
-                this.reactions.add(obj.getJSONArray("tags").optString(i));
 
         } catch (JSONException e) {
             Utilis.exc("models", e);
+        } catch (IOException e) {
+            Utilis.exc("json", e);
+        }
+    }
+
+    public void flipAction(String action){
+        int count = 0;
+
+        if (this.reactions.contains(action)){
+            this.reactions.remove(action);
+            count = -1;
+        }else{
+            this.reactions.add(action);
+            count = 1;
+        }
+        switch (action) {
+            case "LIKE":
+                this.likes += count;
+                break;
+            case "DISLIKE":
+                this.dislikes += count;
+                break;
+            case "ENDORSE":
+                this.endorse += count;
+                break;
+            case "REPORT":
+                this.reports += count;
         }
     }
 

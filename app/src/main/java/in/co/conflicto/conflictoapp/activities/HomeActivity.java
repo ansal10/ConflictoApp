@@ -1,5 +1,6 @@
 package in.co.conflicto.conflictoapp.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -96,7 +97,9 @@ public class HomeActivity extends AppCompatActivity implements
 
     @Override
     public void onListFragmentInteraction(Post post) {
-
+        Intent intent = new Intent(this, PostDetailsActivity.class);
+        intent.putExtra("post_uuid", post.uuid);
+        startActivity(intent);
     }
 }
 

@@ -1,27 +1,30 @@
 package in.co.conflicto.conflictoapp.adapters;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import in.co.conflicto.conflictoapp.R;
-import in.co.conflicto.conflictoapp.activities.HomeActivity;
 import in.co.conflicto.conflictoapp.fragments.AllPostFragment.OnListFragmentInteractionListener;
 import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent.DummyItem;
 import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
@@ -29,14 +32,9 @@ import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.DownloadImageTask;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
-import in.co.conflicto.conflictoapp.utilities.MyApplication;
-import in.co.conflicto.conflictoapp.utilities.SessionData;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.utilities.VolleySingelton;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -81,16 +79,68 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         holder.mEndorseView.setText(post.endorse+"");
         holder.mConflictView.setText(post.conflicts+" Conflicts");
         holder.mSupportView.setText(post.supports+" Supports");
+        holder.mActionPopup.setVisibility(View.GONE);
 
         holder.mView.setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.onListFragmentInteraction(post);
             }
         });
+        if(post.reactions.size() > 0)
+            holder.mActionLabelView.setTextColor(Color.BLUE);
+
+        holder.mActionLabelView.setOnClickListener((View v)-> {
+            if(holder.mActionPopup.getVisibility() == View.GONE)
+                holder.mActionPopup.setVisibility(View.VISIBLE);
+            else
+                holder.mActionPopup.setVisibility(View.GONE);
+
+        });
+
+        holder.mLikeActionView.setOnClickListener(v->{
+            this.updatePostAction(position, "LIKE");
+            holder.mActionPopup.setVisibility(View.GONE);
+            this.notifyItemChanged(position);
+        });
+        holder.mDislikeActionView.setOnClickListener(v->{
+            this.updatePostAction(position, "DISLIKE");
+            holder.mActionPopup.setVisibility(View.GONE);
+            this.notifyItemChanged(position);
+        });
+        holder.mEndorseActionView.setOnClickListener(v->{
+            this.updatePostAction(position, "ENDORSE");
+            holder.mActionPopup.setVisibility(View.GONE);
+            this.notifyItemChanged(position);
+        });
+        holder.mReportActionView.setOnClickListener(v->{
+            this.updatePostAction(position, "REPORT");
+            holder.mActionPopup.setVisibility(View.GONE);
+            this.notifyItemChanged(position);
+        });
+
+        for(String action:post.reactions){
+            switch (action) {
+                case "LIKE":
+                    holder.mLikeActionView.setTextColor(Color.BLUE);
+                    break;
+                case "DISLIKE":
+                    holder.mDislikeActionView.setTextColor(Color.BLUE);
+                    break;
+                case "ENDORSE":
+                    holder.mEndorseActionView.setTextColor(Color.BLUE);
+                    break;
+                case "REPORT":
+                    holder.mReportActionView.setTextColor(Color.BLUE);
+                    break;
+            }
+        }
+
 
         new DownloadImageTask(holder.mDPImageView)
                 .execute(post.user.dpLink);
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -133,6 +183,14 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         public final TextView mConflictView ;
         public final TextView mSupportView ;
         public final ImageView mDPImageView ;
+        public final LinearLayout mActionPopup;
+        public final TextView mActionLabelView;
+        public final TextView mCommentLabelView;
+        public final TextView mLikeActionView;
+        public final TextView mDislikeActionView;
+        public final TextView mEndorseActionView;
+        public final TextView mReportActionView;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -148,7 +206,16 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
             mConflictView = (TextView) view.findViewById(R.id.conflict_id);
             mSupportView = (TextView) view.findViewById(R.id.support_id);
             mDPImageView = (ImageView) view.findViewById(R.id.dp_id);
+            mActionPopup = (LinearLayout) view.findViewById(R.id.action_popup_id);
+            mActionLabelView = (TextView) view.findViewById(R.id.action_label_id);
+            mCommentLabelView = (TextView) view.findViewById(R.id.comment_label_id);
+            mLikeActionView = (TextView) mActionPopup.findViewById(R.id.like_action_id);
+            mDislikeActionView = (TextView) mActionPopup.findViewById(R.id.dislike_action_id);
+            mEndorseActionView = (TextView) mActionPopup.findViewById(R.id.endorse_action_id);
+            mReportActionView = (TextView) mActionPopup.findViewById(R.id.report_action_id);
+
         }
+
 
     }
 
@@ -183,12 +250,33 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
 
                     UIUtils.hideLoader(activity);
                     fragmentListener.refreshCompleted();
-
                     Utilis.exc("volley", error);
                 });
 
             queue.add(request);
 
+        }
+    }
+
+
+    private void updatePostAction(int id, String action) {
+        Post post = posts.get(id);
+        RequestQueue requestQueue = VolleySingelton.getInstance().getRequestQueue();
+        JSONObject js = new JSONObject();
+        try {
+            js.put("action", action);
+            post.flipAction(action);
+            JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.PUT, Constants.SERVER_URL + "/post/"+post.uuid, js,
+                response -> {
+
+            }, error -> {
+                post.flipAction(action);
+                Toast.makeText(activity, "Something went Wrong", Toast.LENGTH_SHORT).show();
+            });
+            requestQueue.add(request);
+
+        } catch (JSONException e) {
+            Utilis.exc("json", e);
         }
     }
 

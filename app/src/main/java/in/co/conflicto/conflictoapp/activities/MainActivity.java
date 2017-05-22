@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 
 import in.co.conflicto.conflictoapp.R;
+import in.co.conflicto.conflictoapp.models.User;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
 import in.co.conflicto.conflictoapp.utilities.SessionData;
@@ -126,13 +127,15 @@ public class MainActivity extends AppCompatActivity {
             js.put("fcm_token", SessionData.getString(Constants.FCM_TOKEN, ""));
 
             RequestQueue requestQueue = VolleySingelton.getInstance().getRequestQueue();
-            JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.POST, Constants.SERVER_URL + "/user/authenticate", js,
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, Constants.SERVER_URL + "/user/authenticate", js,
                 (JSONObject response) -> {
                     try {
+                        User user = new User(response.getJSONObject("fbprofile"));
+                        user.fcmToken = response.getJSONObject("userprofile").getString("fcm_token");
+                        user.firebaseId = response.getJSONObject("userprofile").getString("firebase_id");
+                        user.uuid = response.getJSONObject("userprofile").getString("uuid");
+                        SessionData.currentUser = user;
 
-                        SessionData.setString(Constants.USER_UUID, response.getJSONObject("userprofile").getString("uuid"));
-                        SessionData.setString(Constants.NAME, response.getJSONObject("fbprofile").getString("name"));
-                        SessionData.setString(Constants.DP_LINK, response.getJSONObject("fbprofile").getString("dp_link"));
 
                     } catch (JSONException e) {
                         Utilis.exc("volley", e);

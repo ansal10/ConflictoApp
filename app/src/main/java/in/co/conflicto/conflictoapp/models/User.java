@@ -12,6 +12,9 @@ import in.co.conflicto.conflictoapp.utilities.Utilis;
 public class User {
     public String name ;
     public String dpLink ;
+    public String uuid;
+    public String fcmToken;
+    public String firebaseId;
 
     public User(JSONObject obj){
         try {
