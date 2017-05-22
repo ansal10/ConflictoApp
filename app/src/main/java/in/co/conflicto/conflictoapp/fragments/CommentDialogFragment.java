@@ -94,21 +94,27 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
     public void postComment(String type){
         JSONObject js = new JSONObject();
         try {
+            String comment = commentBox.getText().toString();
+            if (comment.length() < 10){
+                Toast.makeText(MyApplication.getInstance(), "Minimum length for comment is 10", Toast.LENGTH_SHORT).show();
+                return;
+            }
             js.put("type", type);
             js.put("post_uuid", postUUID );
-            js.put("comment", commentBox.getText().toString());
+            js.put("comment", comment );
 
-            if(this.post != null){
-                this.post.addComment(commentBox.getText().toString(), type);
-            }
+//            if(this.post != null){
+//                this.post.addComment(commentBox.getText().toString(), type);
+//            }
             JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.POST, Constants.SERVER_URL + "/comment",  js,
                 res -> {
-
+                    dismiss();
+                    Toast.makeText(MyApplication.getInstance(), "Comment Posted Successfully", Toast.LENGTH_SHORT).show();
                 }, error -> {
                 Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show();
-                if(this.post != null){
-                    this.post.removeComment(commentBox.getText().toString(), type);
-                }
+//                if(this.post != null){
+//                    this.post.removeComment(commentBox.getText().toString(), type);
+//                }
             });
 
             VolleySingelton.getInstance().getRequestQueue().add(request);

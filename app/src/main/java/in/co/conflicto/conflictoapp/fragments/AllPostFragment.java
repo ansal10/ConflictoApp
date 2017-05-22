@@ -55,6 +55,7 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
         this.activity = this.getActivity();
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

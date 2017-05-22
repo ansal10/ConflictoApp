@@ -21,6 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,6 +38,8 @@ import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.utilities.VolleySingelton;
 
+import static android.R.attr.action;
+
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
@@ -50,12 +54,15 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
     private Integer page = 0;
     private Boolean allPostLoaded = false;
     private PostFragmentListener fragmentListener;
+    private Integer defaultActionTextColor;
+    private List<String> actions;
 
     public PostItemRecyclerViewAdapter(Activity activity, OnListFragmentInteractionListener listener, PostFragmentListener fragmentListener) {
         posts = new LinkedList<>();
         mListener = listener;
         this.activity = activity;
         this.fragmentListener = fragmentListener;
+        actions = Arrays.asList("LIKE", "DISLIKE", "REPORT", "ENDORSE");
         this.loadPosts();
     }
 
@@ -69,6 +76,10 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 //        holder.post = posts.get(position);
+        if(position==0 && defaultActionTextColor==null){
+            defaultActionTextColor = holder.mLikeActionView.getCurrentTextColor();
+        }
+
         Post post = posts.get(position);
         holder.mPostTimestampView.setText("posted 2 mins ago");
         holder.mProfileNameView.setText(post.user.name);
@@ -86,8 +97,12 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
                 mListener.onListFragmentInteraction(post);
             }
         });
+
         if(post.reactions.size() > 0)
             holder.mActionLabelView.setTextColor(Color.BLUE);
+        else
+            holder.mActionLabelView.setTextColor(defaultActionTextColor);
+
 
         holder.mActionLabelView.setOnClickListener((View v)-> {
             if(holder.mActionPopup.getVisibility() == View.GONE)
@@ -97,6 +112,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
 
         });
 
+        // notify when liked or disliked
         holder.mLikeActionView.setOnClickListener(v->{
             this.updatePostAction(position, "LIKE");
             holder.mActionPopup.setVisibility(View.GONE);
@@ -118,22 +134,28 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
             this.notifyItemChanged(position);
         });
 
-        for(String action:post.reactions){
-            switch (action) {
-                case "LIKE":
-                    holder.mLikeActionView.setTextColor(Color.BLUE);
-                    break;
-                case "DISLIKE":
-                    holder.mDislikeActionView.setTextColor(Color.BLUE);
-                    break;
-                case "ENDORSE":
-                    holder.mEndorseActionView.setTextColor(Color.BLUE);
-                    break;
-                case "REPORT":
-                    holder.mReportActionView.setTextColor(Color.BLUE);
-                    break;
-            }
-        }
+
+        // Set color of actions
+        if(post.reactions.contains( "LIKE") )
+            holder.mLikeActionView.setTextColor(Color.BLUE);
+        else
+            holder.mLikeActionView.setTextColor(defaultActionTextColor);
+
+        if( post.reactions.contains("DISLIKE"))
+            holder.mDislikeActionView.setTextColor(Color.BLUE);
+        else
+            holder.mDislikeActionView.setTextColor(defaultActionTextColor);
+
+        if(post.reactions.contains("ENDORSE"))
+            holder.mEndorseActionView.setTextColor(Color.BLUE);
+        else
+            holder.mEndorseActionView.setTextColor(defaultActionTextColor);
+
+        if(post.reactions.contains("REPORT"))
+            holder.mReportActionView.setTextColor(Color.BLUE);
+        else
+            holder.mReportActionView.setTextColor(defaultActionTextColor);
+
 
         holder.mCommentLabelView.setOnClickListener(v -> {
             mListener.onCommentActionListener(post);

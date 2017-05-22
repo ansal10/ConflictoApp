@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -85,6 +86,12 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
         holder.mDislikeView.setText(comment.disLikes+" Dislike");
         holder.mEndorseView.setText(comment.endorse+" Endorse");
 
+        holder.mLikeView.setOnClickListener(v -> this.click(holder.mLikeView, "LIKE", position));
+        holder.mDislikeView.setOnClickListener(v -> this.click(holder.mLikeView, "DISLIKE", position));
+        holder.mEndorseView.setOnClickListener(v -> this.click(holder.mLikeView, "ENDORSE", position));
+        holder.mEditView.setOnClickListener(v -> this.click(holder.mLikeView, "EDIT", position));
+        holder.mExpandView.setOnClickListener(v -> this.click(holder.mLikeView, "EXPAND", position));
+
         // set background
         if(comment.isConflict())
             holder.mConstraintLayout.setBackgroundResource(R.color.conflictCommentBG);
@@ -127,29 +134,29 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
             RequestQueue queue = VolleySingelton.getInstance().getRequestQueue();
             fragmentListener.refreshStarted();
             JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.GET, Constants.SERVER_URL + "/comment/"+postUUID, null,
-                    (JSONObject response) -> {
-                        try {
-                            JSONArray arr = response.getJSONArray("results");
-                            for (int i = 0; i < arr.length(); i++) {
-                                comments.add(new Comment(arr.optJSONObject(i)));
-                            }
-                            this.notifyDataSetChanged();
-                            this.page++;
-                            if (arr.length() < 25) {
-                                this.allCommentsLoaded = true;
-                            }
-                            fragmentListener.refreshCompleted();
-
-
-                        } catch (JSONException e) {
-                            Utilis.exc("volley", e);
-                            fragmentListener.refreshCompleted();
-
+                (JSONObject response) -> {
+                    try {
+                        JSONArray arr = response.getJSONArray("results");
+                        for (int i = 0; i < arr.length(); i++) {
+                            comments.add(new Comment(arr.optJSONObject(i)));
                         }
-                        UIUtils.hideLoader(activity);
+                        this.notifyDataSetChanged();
+                        this.page++;
+                        if (arr.length() < 25) {
+                            this.allCommentsLoaded = true;
+                        }
                         fragmentListener.refreshCompleted();
 
-                    }, (VolleyError error) -> {
+
+                    } catch (JSONException e) {
+                        Utilis.exc("volley", e);
+                        fragmentListener.refreshCompleted();
+
+                    }
+                    UIUtils.hideLoader(activity);
+                    fragmentListener.refreshCompleted();
+
+                }, (VolleyError error) -> {
 
                 UIUtils.hideLoader(activity);
                 fragmentListener.refreshCompleted();
@@ -160,6 +167,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
         }
     }
+
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -190,6 +198,35 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
             mLikeView = (TextView) itemView.findViewById(R.id.like_id);
             mDislikeView = (TextView) itemView.findViewById(R.id.dislike_id);
             mEndorseView = (TextView) itemView.findViewById(R.id.endorse_id);
+        }
+    }
+
+    public void click(View v, String action, int position){
+        if(action.equals("LIKE") || action.equals("DISLIKE") || action.equals("ENDORSE")){
+            updateCommentAction(position, action);
+        }
+    }
+
+    private void updateCommentAction(int id, String action) {
+        Comment comment = comments.get(id);
+        RequestQueue requestQueue = VolleySingelton.getInstance().getRequestQueue();
+        JSONObject js = new JSONObject();
+        try {
+            js.put("action", action);
+            comment.flipAction(action);
+            this.notifyItemChanged(id);
+            JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.PUT, Constants.SERVER_URL + "/comment/"+comment.uuid, js,
+                    response -> {
+
+                    }, error -> {
+                comment.flipAction(action);
+                this.notifyItemChanged(id);
+                Toast.makeText(activity, "Something went Wrong", Toast.LENGTH_SHORT).show();
+            });
+            requestQueue.add(request);
+
+        } catch (JSONException e) {
+            Utilis.exc("json", e);
         }
     }
 }

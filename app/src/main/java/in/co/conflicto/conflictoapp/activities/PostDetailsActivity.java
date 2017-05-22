@@ -1,6 +1,8 @@
 package in.co.conflicto.conflictoapp.activities;
 
 import android.content.Context;
+import android.os.PersistableBundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,24 +11,43 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.CommentItemRecyclerViewAdapter;
+import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
 import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
 
-public class PostDetailsActivity extends AppCompatActivity implements PostFragmentListener {
+public class PostDetailsActivity extends AppCompatActivity implements PostFragmentListener, View.OnClickListener {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private String postUUID;
+    private TextView commentLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
-         postUUID = getIntent().getStringExtra("post_uuid");
+        postUUID = getIntent().getStringExtra("post_uuid");
+
+        if(postUUID == null)
+            postUUID = savedInstanceState.getString("post_uuid");
+
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("post_uuid", postUUID);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        postUUID = savedInstanceState.getString("post_uuid");
+    }
 
     @Override
     protected void onResume() {
@@ -38,6 +59,13 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swipeRefreshLayout.setOnRefreshListener(adapter::refresh);
+        commentLabel = (TextView) view.findViewById(R.id.comment_label_id);
+        commentLabel.setOnClickListener(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
@@ -51,4 +79,12 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
         swipeRefreshLayout.setRefreshing(true);
     }
 
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == commentLabel.getId()){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            CommentDialogFragment fragment = CommentDialogFragment.newInstance(postUUID, null);
+            fragment.show(fragmentManager, CommentDialogFragment.class.toString());
+        }
+    }
 }

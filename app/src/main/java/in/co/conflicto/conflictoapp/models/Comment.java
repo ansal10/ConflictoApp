@@ -55,4 +55,30 @@ public class Comment {
         return type.equals("SUPPORT");
     }
 
+    public void flipAction(String action){
+        int count = 0;
+
+        if (this.reactions.contains(action)){
+            this.reactions.remove(action);
+            count = -1;
+        }else{
+            this.reactions.add(action);
+            count = 1;
+        }
+        switch (action) {
+            case "LIKE":
+                this.likes += count;
+                break;
+            case "DISLIKE":
+                this.disLikes += count;
+                break;
+            case "ENDORSE":
+                this.endorse += count;
+                break;
+            case "REPORT":
+                this.reports += count;
+        }
+    }
+
+
 }
