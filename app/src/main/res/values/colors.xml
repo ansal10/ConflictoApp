@@ -3,8 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="conflictCommentBG">#9fffab</color>
-    <color name="supportCommentBG">#ff9494</color>
+    <color name="conflictCommentBG">#ff6568</color>
+    <color name="supportCommentBG">#75ff86</color>
     <color name="expandButton">#0040ff</color>
     <color name="commentLikeTextDefault">#000000</color>
     <color name="commentLikeTextSelected">#0011f9</color>

@@ -121,6 +121,7 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Post post);
 
+        void onCommentActionListener(Post post);
     }
 }
 

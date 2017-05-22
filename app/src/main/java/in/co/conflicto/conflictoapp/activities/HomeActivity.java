@@ -1,10 +1,12 @@
 package in.co.conflicto.conflictoapp.activities;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import in.co.conflicto.conflictoapp.R;
+import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
 import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.adapters.HomeTabsPagerAdapter;
@@ -100,6 +103,14 @@ public class HomeActivity extends AppCompatActivity implements
         Intent intent = new Intent(this, PostDetailsActivity.class);
         intent.putExtra("post_uuid", post.uuid);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCommentActionListener(Post post) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        CommentDialogFragment fragment = CommentDialogFragment.newInstance(post);
+        fragment.show(fragmentManager, CommentDialogFragment.class.toString());
+
     }
 }
 

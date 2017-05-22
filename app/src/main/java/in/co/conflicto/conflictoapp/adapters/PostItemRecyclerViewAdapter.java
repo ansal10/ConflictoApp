@@ -135,6 +135,10 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
             }
         }
 
+        holder.mCommentLabelView.setOnClickListener(v -> {
+            mListener.onCommentActionListener(post);
+        });
+
 
         new DownloadImageTask(holder.mDPImageView)
                 .execute(post.user.dpLink);

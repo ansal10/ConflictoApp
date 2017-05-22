@@ -91,4 +91,17 @@ public class Post {
         }
     }
 
+    public void addComment(String comment, String type) {
+        if(type.equals("SUPPORT"))
+            this.supports ++;
+        else if(type.equals("CONFLICT"))
+            this.conflicts ++;
+    }
+
+    public void removeComment(String comment, String type) {
+        if(type.equals("SUPPORT"))
+            this.supports --;
+        else if(type.equals("CONFLICT"))
+            this.conflicts --;
+    }
 }
