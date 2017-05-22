@@ -17,8 +17,9 @@ import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.CommentItemRecyclerViewAdapter;
 import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
 import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
+import in.co.conflicto.conflictoapp.models.Comment;
 
-public class PostDetailsActivity extends AppCompatActivity implements PostFragmentListener, View.OnClickListener {
+public class PostDetailsActivity extends AppCompatActivity implements PostFragmentListener, View.OnClickListener, CommentItemRecyclerViewAdapter.CommentAdapterListener {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
@@ -86,5 +87,12 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
             CommentDialogFragment fragment = CommentDialogFragment.newInstance(postUUID, null);
             fragment.show(fragmentManager, CommentDialogFragment.class.toString());
         }
+    }
+
+    @Override
+    public void popupCommentEdit(Comment comment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        CommentDialogFragment fragment = CommentDialogFragment.newInstance(postUUID, comment);
+        fragment.show(fragmentManager, CommentDialogFragment.class.toString());
     }
 }

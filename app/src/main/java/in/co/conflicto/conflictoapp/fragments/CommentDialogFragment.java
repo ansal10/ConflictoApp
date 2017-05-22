@@ -40,13 +40,13 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
     private EditText commentBox;
     String postUUID;
     Post post;
-    List<Comment> comments;
+    Comment comment;
 
 
-    public static CommentDialogFragment newInstance(String postUUID, List<Comment> comments) {
+    public static CommentDialogFragment newInstance(String postUUID, Comment comment) {
         CommentDialogFragment fragment = new CommentDialogFragment();
         fragment.postUUID = postUUID;
-        fragment.comments = comments;
+        fragment.comment = comment;
         return fragment;
     }
 
@@ -77,6 +77,14 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         conflictButton.setOnClickListener(this);
         supportButton.setOnClickListener(this);
 
+        if(comment != null){
+            commentBox.setText(comment.comment);
+            conflictButton.setText("DELETE");
+            supportButton.setText("UPDATE");
+        }
+
+
+
         return view;
 
     }
@@ -84,10 +92,17 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == conflictButton.getId())
-            postComment("CONFLICT");
-        else if(v.getId() == supportButton.getId())
-            postComment("SUPPORT");
+        if(comment==null) {
+            if (v.getId() == conflictButton.getId())
+                postComment("CONFLICT");
+            else if (v.getId() == supportButton.getId())
+                postComment("SUPPORT");
+        }else if (comment!=null){
+            if(v.getId() == conflictButton.getId())
+                deleteComment(comment);
+            else if(v.getId() == supportButton.getId())
+                updateComment(comment);
+        }
 
     }
 
@@ -121,5 +136,33 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         } catch (JSONException e) {
             Utilis.exc("json", e);
         }
+    }
+
+    public void deleteComment(Comment comment){
+        JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.DELETE, Constants.SERVER_URL+ "/comment/" + comment.uuid , null,
+            response -> {
+                dismiss();
+                Toast.makeText(MyApplication.getInstance(), "Comment Deleted Successfully", Toast.LENGTH_SHORT).show();
+
+            }, error -> {
+                Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        });
+        VolleySingelton.getInstance().getRequestQueue().add(request);
+    }
+
+    public void updateComment(Comment comment){
+        JSONObject js = new JSONObject();
+        try {
+            js.put("comment", commentBox.getText().toString() );
+        } catch (JSONException e) {
+            Utilis.exc("json", e);
+        }
+        JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.PUT, Constants.SERVER_URL+ "/comment/" + comment.uuid , js,
+                response -> {
+                    dismiss();
+                    Toast.makeText(MyApplication.getInstance(), "Comment Updated Successfully", Toast.LENGTH_SHORT).show();
+                }, error -> Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show());
+        VolleySingelton.getInstance().getRequestQueue().add(request);
+
     }
 }

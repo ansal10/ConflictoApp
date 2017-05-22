@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import in.co.conflicto.conflictoapp.R;
+import in.co.conflicto.conflictoapp.activities.PostDetailsActivity;
 import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Comment;
 import in.co.conflicto.conflictoapp.models.Post;
@@ -43,13 +44,13 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
 
     private final List<Comment> comments;
-    private final Activity activity;
+    private final PostDetailsActivity activity;
     private final String postUUID;
     private final PostFragmentListener fragmentListener;
     private boolean allCommentsLoaded;
     private int page;
 
-    public CommentItemRecyclerViewAdapter(Activity activity, String postUUID, PostFragmentListener fragmentListener){
+    public CommentItemRecyclerViewAdapter(PostDetailsActivity activity, String postUUID, PostFragmentListener fragmentListener){
         comments = new LinkedList<>();
         this.activity = activity;
         this.postUUID = postUUID;
@@ -89,8 +90,8 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
         holder.mLikeView.setOnClickListener(v -> this.click(holder.mLikeView, "LIKE", position));
         holder.mDislikeView.setOnClickListener(v -> this.click(holder.mLikeView, "DISLIKE", position));
         holder.mEndorseView.setOnClickListener(v -> this.click(holder.mLikeView, "ENDORSE", position));
-        holder.mEditView.setOnClickListener(v -> this.click(holder.mLikeView, "EDIT", position));
         holder.mExpandView.setOnClickListener(v -> this.click(holder.mLikeView, "EXPAND", position));
+
 
         // set background
         if(comment.isConflict())
@@ -99,8 +100,10 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
             holder.mConstraintLayout.setBackgroundResource(R.color.supportCommentBG);
 
         // set edit button visiblity
-        if(SessionData.currentUser.dpLink.equals(comment.user.dpLink))
+        if(SessionData.currentUser.dpLink.equals(comment.user.dpLink)) {
             holder.mEditView.setVisibility(View.VISIBLE);
+            holder.mEditView.setOnClickListener(v -> this.click(holder.mLikeView, "EDIT", position));
+        }
         else
             holder.mEditView.setVisibility(View.GONE);
 
@@ -205,6 +208,9 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
         if(action.equals("LIKE") || action.equals("DISLIKE") || action.equals("ENDORSE")){
             updateCommentAction(position, action);
         }
+        else if(action.equals("EDIT")){
+            activity.popupCommentEdit(comments.get(position));
+        }
     }
 
     private void updateCommentAction(int id, String action) {
@@ -228,5 +234,9 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
         } catch (JSONException e) {
             Utilis.exc("json", e);
         }
+    }
+
+    public interface CommentAdapterListener{
+        void popupCommentEdit(Comment comment);
     }
 }
