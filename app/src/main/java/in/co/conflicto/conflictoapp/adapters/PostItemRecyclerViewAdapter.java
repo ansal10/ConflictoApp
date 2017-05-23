@@ -16,6 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +33,7 @@ import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.DownloadImageTask;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
+import in.co.conflicto.conflictoapp.utilities.MyApplication;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.utilities.VolleySingelton;
@@ -154,8 +156,8 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         });
 
 
-        new DownloadImageTask(holder.mDPImageView)
-                .execute(post.user.dpLink);
+        Picasso.with(MyApplication.getInstance().getBaseContext()).load(post.user.dpLink).into(holder.mDPImageView);
+        
     }
 
 

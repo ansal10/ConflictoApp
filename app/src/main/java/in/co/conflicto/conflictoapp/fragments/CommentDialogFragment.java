@@ -170,5 +170,5 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         VolleySingelton.getInstance().getRequestQueue().add(request);
 
     }
-    
+
 }

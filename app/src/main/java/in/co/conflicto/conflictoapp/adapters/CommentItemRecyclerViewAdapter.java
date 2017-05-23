@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ import in.co.conflicto.conflictoapp.models.Comment;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.DownloadImageTask;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
+import in.co.conflicto.conflictoapp.utilities.MyApplication;
 import in.co.conflicto.conflictoapp.utilities.SessionData;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
@@ -119,8 +121,9 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
 
 
-        new DownloadImageTask(holder.mProfileImageView)
-                .execute(comment.user.dpLink);
+        Picasso.with(MyApplication.getInstance().getBaseContext()).
+                load(comment.user.dpLink).into(holder.mProfileImageView);
+
 
     }
 
