@@ -104,4 +104,10 @@ public class Post {
         else if(type.equals("CONFLICT"))
             this.conflicts --;
     }
+
+    public Post(String title, String description, String uuid) {
+        this.title = title;
+        this.description = description;
+        this.uuid = uuid;
+    }
 }

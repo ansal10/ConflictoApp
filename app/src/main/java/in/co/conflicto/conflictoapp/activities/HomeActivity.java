@@ -21,6 +21,7 @@ import android.widget.Toast;
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
 import in.co.conflicto.conflictoapp.models.Post;
+import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.adapters.HomeTabsPagerAdapter;
 import in.co.conflicto.conflictoapp.fragments.AllPostFragment;
@@ -64,8 +65,8 @@ public class HomeActivity extends AppCompatActivity implements
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((View view) -> {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            Intent intent = new Intent(this, NewPostActivity.class);
+            UIUtils.startActivity(intent, false);
         });
 
     }

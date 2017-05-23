@@ -21,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,8 +36,6 @@ import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.utilities.VolleySingelton;
-
-import static android.R.attr.action;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -224,8 +221,8 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
 
             mProfileNameView = (TextView) view.findViewById(R.id.profile_name_id);
             mPostTimestampView = (TextView) view.findViewById(R.id.post_timestamp_id);
-            mPostTitleView = (TextView) view.findViewById(R.id.post_title_id);
-            mPostDescriptionView = (TextView) view.findViewById(R.id.post_description_id);
+            mPostTitleView = (TextView) view.findViewById(R.id.new_post_title_id);
+            mPostDescriptionView = (TextView) view.findViewById(R.id.new_post_description_id);
             mLikesView = (TextView) view.findViewById(R.id.likes_id);
             mDislikeView = (TextView) view.findViewById(R.id.dislikes_id);
             mEndorseView = (TextView) view.findViewById(R.id.endorse_id);

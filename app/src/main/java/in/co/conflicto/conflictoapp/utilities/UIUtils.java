@@ -64,4 +64,13 @@ public class UIUtils {
         }
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
+
+    public static void startActivity(Intent intent, boolean clearStack) {
+        if (clearStack) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        } else {
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        MyApplication.getAppContext().startActivity(intent);
+    }
 }
