@@ -20,6 +20,7 @@ public class User {
         try {
             this.name = obj.getString("name");
             this.dpLink = obj.getString("dp_link");
+            this.uuid = obj.getString("uuid");
         } catch (JSONException e) {
             Utilis.exc("models", e);
         }

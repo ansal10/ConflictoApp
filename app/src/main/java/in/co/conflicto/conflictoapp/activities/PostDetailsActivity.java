@@ -1,6 +1,5 @@
 package in.co.conflicto.conflictoapp.activities;
 
-import android.content.Context;
 import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,15 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.CommentItemRecyclerViewAdapter;
 import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
-import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
+import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Comment;
 
 public class PostDetailsActivity extends AppCompatActivity implements PostFragmentListener, View.OnClickListener,

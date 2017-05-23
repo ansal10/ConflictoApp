@@ -1,7 +1,5 @@
 package in.co.conflicto.conflictoapp.adapters;
 
-import android.app.Activity;
-import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,9 +23,8 @@ import java.util.List;
 
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.activities.PostDetailsActivity;
-import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
+import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Comment;
-import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.DownloadImageTask;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
@@ -100,7 +97,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
             holder.mConstraintLayout.setBackgroundResource(R.color.supportCommentBG);
 
         // set edit button visiblity
-        if(SessionData.currentUser.dpLink.equals(comment.user.dpLink)) {
+        if(SessionData.currentUser.uuid.equals(comment.user.uuid)) {
             holder.mEditView.setVisibility(View.VISIBLE);
             holder.mEditView.setOnClickListener(v -> this.click(holder.mLikeView, "EDIT", position));
         }

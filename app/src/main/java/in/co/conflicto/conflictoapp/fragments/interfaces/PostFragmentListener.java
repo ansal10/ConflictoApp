@@ -1,4 +1,4 @@
-package in.co.conflicto.conflictoapp.fragments.dummy;
+package in.co.conflicto.conflictoapp.fragments.interfaces;
 
 /**
  * Created by ansal on 5/21/17.

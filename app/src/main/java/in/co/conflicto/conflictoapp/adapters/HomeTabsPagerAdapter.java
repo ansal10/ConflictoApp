@@ -1,6 +1,5 @@
 package in.co.conflicto.conflictoapp.adapters;
 
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import in.co.conflicto.conflictoapp.fragments.AllPostFragment;
 import in.co.conflicto.conflictoapp.fragments.PinnedPostFragment;
 import in.co.conflicto.conflictoapp.fragments.TopRatedPostFragment;
-import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent;
 
 /**
  * Created by ansal on 5/14/17.

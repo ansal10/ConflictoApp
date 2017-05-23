@@ -34,6 +34,7 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
     private EditText descriptionEditText;
     private Post post;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +66,14 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
     private void uploadNewPost() {
         String title = titleEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
+        if (title.length()< 10 || title.length()>250){
+            Toast.makeText(this, "Title should be minimum 10 and maximum 250 of length", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (description.length() < 20){
+            Toast.makeText(this, "Description should be minimum 20 length", Toast.LENGTH_SHORT).show();
+            return;
+        }
         JSONObject js = new JSONObject();
         try {
             js.put("title", title);
@@ -80,13 +89,11 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
                 response -> {
                     UIUtils.hideLoader(this);
                     Toast.makeText(this, "Post Successfully submitted ", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, HomeActivity.class);
-                    UIUtils.startActivity(intent, true);
+                    this.onBackPressed();
                 }, error -> {
                 UIUtils.hideLoader(this);
                 Toast.makeText(this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
             });
-
             VolleySingelton.getInstance().getRequestQueue().add(request);
         } catch (JSONException e) {
             Utilis.exc("json", e);

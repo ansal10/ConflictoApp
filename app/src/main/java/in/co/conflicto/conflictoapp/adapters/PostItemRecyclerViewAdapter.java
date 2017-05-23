@@ -26,9 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import in.co.conflicto.conflictoapp.R;
-import in.co.conflicto.conflictoapp.fragments.AllPostFragment.OnListFragmentInteractionListener;
-import in.co.conflicto.conflictoapp.fragments.dummy.DummyContent.DummyItem;
-import in.co.conflicto.conflictoapp.fragments.dummy.PostFragmentListener;
+import in.co.conflicto.conflictoapp.fragments.interfaces.OnListFragmentInteractionListener;
+import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.DownloadImageTask;
@@ -37,11 +36,7 @@ import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.utilities.VolleySingelton;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRecyclerViewAdapter.ViewHolder>
     implements RecyclerView.OnItemTouchListener {
 
@@ -260,7 +255,6 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
                         }
                         fragmentListener.refreshCompleted();
 
-
                     } catch (JSONException e) {
                         Utilis.exc("volley", e);
                         fragmentListener.refreshCompleted();
@@ -275,9 +269,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
                     fragmentListener.refreshCompleted();
                     Utilis.exc("volley", error);
                 });
-
             queue.add(request);
-
         }
     }
 
