@@ -1,25 +1,24 @@
 package in.co.conflicto.conflictoapp.fragments;
 
-import android.content.Context;
-import android.net.Uri;
+import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.activities.PostDetailsActivity;
@@ -28,7 +27,6 @@ import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
 import in.co.conflicto.conflictoapp.utilities.MyApplication;
-import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.utilities.VolleySingelton;
 
@@ -172,9 +170,5 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         VolleySingelton.getInstance().getRequestQueue().add(request);
 
     }
-
-    public interface DialogBoxListenerInterface{
-        public void commentUpdated(Comment comment);
-        public void commentDeleted(Comment comment);
-    }
+    
 }

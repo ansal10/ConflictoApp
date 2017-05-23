@@ -13,12 +13,13 @@ import android.widget.TextView;
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.CommentItemRecyclerViewAdapter;
 import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
+import in.co.conflicto.conflictoapp.fragments.interfaces.DialogBoxListenerInterface;
 import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Comment;
 
 public class PostDetailsActivity extends AppCompatActivity implements PostFragmentListener, View.OnClickListener,
         CommentItemRecyclerViewAdapter.CommentAdapterListener,
-        CommentDialogFragment.DialogBoxListenerInterface{
+        DialogBoxListenerInterface {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
