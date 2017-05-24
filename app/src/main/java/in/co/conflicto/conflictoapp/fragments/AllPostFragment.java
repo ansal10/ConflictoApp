@@ -105,7 +105,12 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
         List<Post> posts = this.postAdapter.getPosts();
         ds.putPosts(POST_TAG, posts);
         super.onStop();
+    }
 
+    @Override
+    public void onDestroy() {
+        ds.removePosts(POST_TAG);
+        super.onDestroy();
     }
 
     @Override

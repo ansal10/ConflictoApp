@@ -12,10 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.PostItemRecyclerViewAdapter;
 import in.co.conflicto.conflictoapp.fragments.interfaces.OnListFragmentInteractionListener;
 import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
+import in.co.conflicto.conflictoapp.models.Post;
+import in.co.conflicto.conflictoapp.utilities.DiskCaching;
+import in.co.conflicto.conflictoapp.utilities.MyApplication;
 
 /**
  * A fragment representing a list of Items.
@@ -29,6 +34,8 @@ public class PinnedPostFragment extends Fragment implements PostFragmentListener
     private Activity activity;
     private PostItemRecyclerViewAdapter postAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private String POST_TAG = "pinned_post";
+    private DiskCaching ds;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -48,6 +55,7 @@ public class PinnedPostFragment extends Fragment implements PostFragmentListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.activity = this.getActivity();
+        ds = MyApplication.getDiskCachingInstance();
     }
 
 
@@ -63,10 +71,12 @@ public class PinnedPostFragment extends Fragment implements PostFragmentListener
         mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_item_list, container, false);
 
         // Set the adapter
+        List<Post> posts = ds.getPosts(POST_TAG);
+
         Context context = mSwipeRefreshLayout.getContext();
         RecyclerView recyclerView = (RecyclerView) mSwipeRefreshLayout.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener, postFragmentListener, null);
+        this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener, postFragmentListener, posts);
         recyclerView.setAdapter(postAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener( () -> {
@@ -77,6 +87,20 @@ public class PinnedPostFragment extends Fragment implements PostFragmentListener
     }
 
 
+
+    @Override
+    public void onStop() {
+        List<Post> posts = this.postAdapter.getPosts();
+        ds.putPosts(POST_TAG, posts);
+        super.onStop();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        ds.removePosts(POST_TAG);
+        super.onDestroy();
+    }
 
 
     @Override

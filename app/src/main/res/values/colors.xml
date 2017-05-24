@@ -3,9 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="conflictCommentBG">#ffaaac</color>
-    <color name="supportCommentBG">#adffb7</color>
+    <color name="conflictCommentBG">#b40009</color>
+    <color name="supportCommentBG">#00ab16</color> =
     <color name="expandButton">#0040ff</color>
     <color name="commentLikeTextDefault">#000000</color>
     <color name="commentLikeTextSelected">#0011f9</color>
+    <color name="comment_text_color">#ffffff</color>
 </resources>
