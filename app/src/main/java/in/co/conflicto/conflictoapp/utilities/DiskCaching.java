@@ -1,10 +1,5 @@
 package in.co.conflicto.conflictoapp.utilities;
 
-import net.rehacktive.waspdb.WaspDb;
-import net.rehacktive.waspdb.WaspFactory;
-import net.rehacktive.waspdb.WaspHash;
-
-import java.util.HashMap;
 import java.util.List;
 
 import in.co.conflicto.conflictoapp.models.Post;
@@ -39,6 +34,6 @@ public class DiskCaching {
     }
 
     public void removePosts(String type){
-        
+
     }
 }
