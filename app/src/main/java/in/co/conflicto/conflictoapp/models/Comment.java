@@ -7,15 +7,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
+import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 
 /**
  * Created by ansal on 5/22/17.
  */
 
-public class Comment {
+public class Comment implements Serializable {
     public String comment;
     public Integer likes;
     public Integer disLikes;
@@ -29,16 +31,16 @@ public class Comment {
 
     public Comment(JSONObject obj){
         try {
-            comment = obj.getString("comment");
-            likes = obj.getInt("likes");
-            disLikes = obj.getInt("dislikes");
-            reports = obj.getInt("reports");
-            endorse = obj.getInt("endorse");
-            postUUID = obj.getString("post_uuid");
-            reactions = new ObjectMapper().readValue(obj.getString("reactions"), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
-            type = obj.getString("type");
-            uuid = obj.getString("uuid");
-            user = new User(obj.getJSONObject("user").getJSONObject("fbprofile"));
+            comment = obj.getString(Constants.COMMENT_KEY);
+            likes = obj.getInt(Constants.LIKES_KEY);
+            disLikes = obj.getInt(Constants.DISLIKES_KEY);
+            reports = obj.getInt(Constants.REPORTS_KEY);
+            endorse = obj.getInt(Constants.ENDORSE_KEY);
+            postUUID = obj.getString(Constants.POST_UUID_KEY);
+            reactions = new ObjectMapper().readValue(obj.getString(Constants.REACTIONS_KEY), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+            type = obj.getString(Constants.TYPE_KEY);
+            uuid = obj.getString(Constants.UUID_KEY);
+            user = new User(obj.getJSONObject(Constants.USER_KEY).getJSONObject(Constants.FBPROFILE_KEY));
 
         } catch (JSONException e) {
             Utilis.exc("json", e);
@@ -48,11 +50,11 @@ public class Comment {
     }
 
     public boolean isConflict(){
-        return type.equals("CONFLICT");
+        return type.equals(Constants.COMMENT_CONFLICT_TYPE);
     }
 
     public boolean isSupport(){
-        return type.equals("SUPPORT");
+        return type.equals(Constants.COMMENT_SUPPORT_TYPE);
     }
 
     public void flipAction(String action){
@@ -66,16 +68,16 @@ public class Comment {
             count = 1;
         }
         switch (action) {
-            case "LIKE":
+            case Constants.LIKE_ACTION_KEY:
                 this.likes += count;
                 break;
-            case "DISLIKE":
+            case Constants.DISLIKE_ACTION_KEY:
                 this.disLikes += count;
                 break;
-            case "ENDORSE":
+            case Constants.ENDORSE_ACTION_KEY:
                 this.endorse += count;
                 break;
-            case "REPORT":
+            case Constants.REPORT_ACTION_KEY:
                 this.reports += count;
         }
     }

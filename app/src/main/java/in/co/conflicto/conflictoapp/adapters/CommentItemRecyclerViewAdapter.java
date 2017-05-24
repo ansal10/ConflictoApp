@@ -86,9 +86,9 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
         holder.mDislikeView.setText(comment.disLikes+" Dislike");
         holder.mEndorseView.setText(comment.endorse+" Endorse");
 
-        holder.mLikeView.setOnClickListener(v -> this.click(holder.mLikeView, "LIKE", position));
-        holder.mDislikeView.setOnClickListener(v -> this.click(holder.mLikeView, "DISLIKE", position));
-        holder.mEndorseView.setOnClickListener(v -> this.click(holder.mLikeView, "ENDORSE", position));
+        holder.mLikeView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.LIKE_ACTION_KEY, position));
+        holder.mDislikeView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.DISLIKE_ACTION_KEY, position));
+        holder.mEndorseView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.ENDORSE_ACTION_KEY, position));
         holder.mExpandView.setOnClickListener(v -> this.click(holder.mLikeView, "EXPAND", position));
 
 
@@ -107,15 +107,15 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
             holder.mEditView.setVisibility(View.GONE);
 
         // set like dislikes color
-        if(comment.reactions.contains("LIKE"))
+        if(comment.reactions.contains(Constants.LIKE_ACTION_KEY))
             holder.mLikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
         else holder.mLikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
 
-        if(comment.reactions.contains("DISLIKE"))
+        if(comment.reactions.contains(Constants.DISLIKE_ACTION_KEY))
             holder.mDislikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
         else holder.mDislikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
 
-        if(comment.reactions.contains("ENDORSE"))
+        if(comment.reactions.contains(Constants.ENDORSE_ACTION_KEY))
             holder.mEndorseView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
         else holder.mEndorseView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
 
@@ -205,7 +205,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
     }
 
     public void click(View v, String action, int position){
-        if(action.equals("LIKE") || action.equals("DISLIKE") || action.equals("ENDORSE")){
+        if(action.equals(Constants.LIKE_ACTION_KEY) || action.equals(Constants.DISLIKE_ACTION_KEY) || action.equals(Constants.ENDORSE_ACTION_KEY)){
             updateCommentAction(position, action);
         }
         else if(action.equals("EDIT")){
@@ -227,7 +227,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
                     }, error -> {
                 comment.flipAction(action);
                 this.notifyItemChanged(id);
-                Toast.makeText(activity, "Something went Wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, Constants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
             });
             requestQueue.add(request);
 

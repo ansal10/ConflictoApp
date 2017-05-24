@@ -7,16 +7,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 
 /**
  * Created by ansal on 5/14/17.
  */
 
-public class Post {
+public class Post implements Serializable {
     public String title ;
     public String description ;
     public String category ;
@@ -36,23 +38,23 @@ public class Post {
 
         try {
 
-            this.title = obj.getString("title");
-            this.description = obj.getString("description");
-            this.category = obj.getString("category");
-            this.sharedPost = obj.getBoolean("shared_post");
-            this.uuid = obj.getString("uuid");
+            this.title = obj.getString(Constants.TITLE_KEY);
+            this.description = obj.getString(Constants.DESCRIPTION_KEY);
+            this.category = obj.getString(Constants.CATEGORY_KEY);
+            this.sharedPost = obj.getBoolean(Constants.SHARED_POST_KEY);
+            this.uuid = obj.getString(Constants.UUID_KEY);
             this.tags = new ArrayList<>();
-            this.likes = obj.getInt("likes");
-            this.dislikes = obj.getInt("dislikes");
-            this.endorse = obj.getInt("endorse");
-            this.supports = obj.getInt("supports");
-            this.conflicts = obj.getInt("conflicts");
-            this.reports = obj.getInt("reports");
+            this.likes = obj.getInt(Constants.LIKES_KEY);
+            this.dislikes = obj.getInt(Constants.DISLIKES_KEY);
+            this.endorse = obj.getInt(Constants.ENDORSE_KEY);
+            this.supports = obj.getInt(Constants.SUPPORTS_KEY);
+            this.conflicts = obj.getInt(Constants.CONFLICTS_KEY);
+            this.reports = obj.getInt(Constants.REPORTS_KEY);
             this.reactions = new ArrayList<>();
-            this.user = new User(obj.getJSONObject("user").getJSONObject("fbprofile"));
+            this.user = new User(obj.getJSONObject(Constants.USER_KEY).getJSONObject(Constants.FBPROFILE_KEY));
 
-            this.tags = new ObjectMapper().readValue(obj.getString("tags"), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
-            this.reactions = new ObjectMapper().readValue(obj.getString("reactions"), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+            this.tags = new ObjectMapper().readValue(obj.getString(Constants.TAGS_KEY), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+            this.reactions = new ObjectMapper().readValue(obj.getString(Constants.REACTIONS_KEY), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
 
 
         } catch (JSONException e) {
@@ -73,31 +75,31 @@ public class Post {
             count = 1;
         }
         switch (action) {
-            case "LIKE":
+            case Constants.LIKE_ACTION_KEY:
                 this.likes += count;
                 break;
-            case "DISLIKE":
+            case Constants.DISLIKE_ACTION_KEY:
                 this.dislikes += count;
                 break;
-            case "ENDORSE":
+            case Constants.ENDORSE_ACTION_KEY:
                 this.endorse += count;
                 break;
-            case "REPORT":
+            case Constants.REPORT_ACTION_KEY:
                 this.reports += count;
         }
     }
 
     public void addComment(String comment, String type) {
-        if(type.equals("SUPPORT"))
+        if(type.equals(Constants.COMMENT_SUPPORT_TYPE))
             this.supports ++;
-        else if(type.equals("CONFLICT"))
+        else if(type.equals(Constants.COMMENT_CONFLICT_TYPE))
             this.conflicts ++;
     }
 
     public void removeComment(String comment, String type) {
-        if(type.equals("SUPPORT"))
+        if(type.equals(Constants.COMMENT_SUPPORT_TYPE))
             this.supports --;
-        else if(type.equals("CONFLICT"))
+        else if(type.equals(Constants.COMMENT_CONFLICT_TYPE))
             this.conflicts --;
     }
 

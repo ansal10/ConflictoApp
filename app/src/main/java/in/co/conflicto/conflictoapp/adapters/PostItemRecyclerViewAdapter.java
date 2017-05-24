@@ -51,13 +51,18 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
     private Integer defaultActionTextColor;
     private List<String> actions;
 
-    public PostItemRecyclerViewAdapter(Activity activity, OnListFragmentInteractionListener listener, PostFragmentListener fragmentListener) {
-        posts = new LinkedList<>();
+    public PostItemRecyclerViewAdapter(Activity activity, OnListFragmentInteractionListener listener, PostFragmentListener fragmentListener, List<Post> posts) {
+
         mListener = listener;
         this.activity = activity;
         this.fragmentListener = fragmentListener;
-        actions = Arrays.asList("LIKE", "DISLIKE", "REPORT", "ENDORSE");
-        this.loadPosts();
+        actions = Arrays.asList(Constants.LIKE_ACTION_KEY, Constants.DISLIKE_ACTION_KEY, Constants.REPORT_ACTION_KEY, Constants.ENDORSE_ACTION_KEY);
+        if (posts == null) {
+            this.posts = new LinkedList<>();
+            this.loadPosts();
+        }else {
+            this.posts = posts;
+        }
     }
 
     @Override
@@ -66,6 +71,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
                 .inflate(R.layout.post_item_2, parent, false);
         return new ViewHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -108,44 +114,44 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
 
         // notify when liked or disliked
         holder.mLikeActionView.setOnClickListener(v->{
-            this.updatePostAction(position, "LIKE");
+            this.updatePostAction(position, Constants.LIKE_ACTION_KEY);
             holder.mActionPopup.setVisibility(View.GONE);
             this.notifyItemChanged(position);
         });
         holder.mDislikeActionView.setOnClickListener(v->{
-            this.updatePostAction(position, "DISLIKE");
+            this.updatePostAction(position, Constants.DISLIKE_ACTION_KEY);
             holder.mActionPopup.setVisibility(View.GONE);
             this.notifyItemChanged(position);
         });
         holder.mEndorseActionView.setOnClickListener(v->{
-            this.updatePostAction(position, "ENDORSE");
+            this.updatePostAction(position, Constants.ENDORSE_ACTION_KEY);
             holder.mActionPopup.setVisibility(View.GONE);
             this.notifyItemChanged(position);
         });
         holder.mReportActionView.setOnClickListener(v->{
-            this.updatePostAction(position, "REPORT");
+            this.updatePostAction(position, Constants.REPORT_ACTION_KEY);
             holder.mActionPopup.setVisibility(View.GONE);
             this.notifyItemChanged(position);
         });
 
 
         // Set color of actions
-        if(post.reactions.contains( "LIKE") )
+        if(post.reactions.contains( Constants.LIKE_ACTION_KEY) )
             holder.mLikeActionView.setTextColor(Color.BLUE);
         else
             holder.mLikeActionView.setTextColor(defaultActionTextColor);
 
-        if( post.reactions.contains("DISLIKE"))
+        if( post.reactions.contains(Constants.DISLIKE_ACTION_KEY))
             holder.mDislikeActionView.setTextColor(Color.BLUE);
         else
             holder.mDislikeActionView.setTextColor(defaultActionTextColor);
 
-        if(post.reactions.contains("ENDORSE"))
+        if(post.reactions.contains(Constants.ENDORSE_ACTION_KEY))
             holder.mEndorseActionView.setTextColor(Color.BLUE);
         else
             holder.mEndorseActionView.setTextColor(defaultActionTextColor);
 
-        if(post.reactions.contains("REPORT"))
+        if(post.reactions.contains(Constants.REPORT_ACTION_KEY))
             holder.mReportActionView.setTextColor(Color.BLUE);
         else
             holder.mReportActionView.setTextColor(defaultActionTextColor);
@@ -157,7 +163,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
 
 
         Picasso.with(MyApplication.getInstance().getBaseContext()).load(post.user.dpLink).into(holder.mDPImageView);
-        
+
     }
 
 
@@ -275,6 +281,10 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         }
     }
 
+    public List<Post> getPosts(){
+        return posts;
+    }
+
 
     private void updatePostAction(int id, String action) {
         Post post = posts.get(id);
@@ -288,7 +298,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
 
             }, error -> {
                 post.flipAction(action);
-                Toast.makeText(activity, "Something went Wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, Constants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
             });
             requestQueue.add(request);
 

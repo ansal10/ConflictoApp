@@ -48,9 +48,9 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
         submitButton.setOnClickListener(this);
 
         Intent intent = getIntent();
-        String title = intent.getStringExtra("title");
-        String description = intent.getStringExtra("description");
-        String post_uuid = intent.getStringExtra("post_uuid");
+        String title = intent.getStringExtra(Constants.TITLE_KEY);
+        String description = intent.getStringExtra(Constants.DESCRIPTION_KEY);
+        String post_uuid = intent.getStringExtra(Constants.POST_UUID_KEY);
         if(title!=null && description!=null && post_uuid!=null){
             post = new Post(title, description, post_uuid);
         }
@@ -76,8 +76,8 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
         }
         JSONObject js = new JSONObject();
         try {
-            js.put("title", title);
-            js.put("description", description);
+            js.put(Constants.TITLE_KEY, title);
+            js.put(Constants.DESCRIPTION_KEY, description);
             String url = Constants.SERVER_URL + "/post";
             int method = Request.Method.POST;
             if(post!=null) {
@@ -92,7 +92,7 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
                     this.onBackPressed();
                 }, error -> {
                 UIUtils.hideLoader(this);
-                Toast.makeText(this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, Constants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
             });
             VolleySingelton.getInstance().getRequestQueue().add(request);
         } catch (JSONException e) {

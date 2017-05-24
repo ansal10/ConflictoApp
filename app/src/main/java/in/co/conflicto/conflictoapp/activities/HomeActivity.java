@@ -18,6 +18,7 @@ import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
 import in.co.conflicto.conflictoapp.fragments.interfaces.OnListFragmentInteractionListener;
 import in.co.conflicto.conflictoapp.models.Post;
+import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.adapters.HomeTabsPagerAdapter;
 
@@ -88,7 +89,7 @@ public class HomeActivity extends AppCompatActivity implements OnListFragmentInt
     @Override
     public void onListFragmentInteraction(Post post) {
         Intent intent = new Intent(this, PostDetailsActivity.class);
-        intent.putExtra("post_uuid", post.uuid);
+        intent.putExtra(Constants.POST_UUID_KEY, post.uuid);
         startActivity(intent);
     }
 

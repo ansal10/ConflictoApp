@@ -16,6 +16,7 @@ import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
 import in.co.conflicto.conflictoapp.fragments.interfaces.DialogBoxListenerInterface;
 import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Comment;
+import in.co.conflicto.conflictoapp.utilities.Constants;
 
 public class PostDetailsActivity extends AppCompatActivity implements PostFragmentListener, View.OnClickListener,
         CommentItemRecyclerViewAdapter.CommentAdapterListener,
@@ -31,24 +32,24 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
-        postUUID = getIntent().getStringExtra("post_uuid");
+        postUUID = getIntent().getStringExtra(Constants.POST_UUID_KEY);
 
         if(postUUID == null)
-            postUUID = savedInstanceState.getString("post_uuid");
+            postUUID = savedInstanceState.getString(Constants.POST_UUID_KEY);
 
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString("post_uuid", postUUID);
+        outState.putString(Constants.POST_UUID_KEY, postUUID);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        postUUID = savedInstanceState.getString("post_uuid");
+        postUUID = savedInstanceState.getString(Constants.POST_UUID_KEY);
     }
 
     @Override

@@ -131,10 +131,10 @@ public class MainActivity extends AppCompatActivity {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, Constants.SERVER_URL + "/user/authenticate", js,
                 (JSONObject response) -> {
                     try {
-                        User user = new User(response.getJSONObject("fbprofile"));
+                        User user = new User(response.getJSONObject(Constants.FBPROFILE_KEY));
                         user.fcmToken = response.getJSONObject("userprofile").getString("fcm_token");
                         user.firebaseId = response.getJSONObject("userprofile").getString("firebase_id");
-                        user.uuid = response.getJSONObject("userprofile").getString("uuid");
+                        user.uuid = response.getJSONObject("userprofile").getString(Constants.UUID_KEY);
                         SessionData.currentUser = user;
                         MyApplication.getInstance().saveCurrentUser(SessionData.currentUser);
 

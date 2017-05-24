@@ -66,7 +66,7 @@ public class TopRatedPostFragment extends Fragment implements PostFragmentListen
         Context context = mSwipeRefreshLayout.getContext();
         RecyclerView recyclerView = (RecyclerView) mSwipeRefreshLayout.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener, postFragmentListener);
+        this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener, postFragmentListener, null);
         recyclerView.setAdapter(postAdapter);
 
         mSwipeRefreshLayout.setOnRefreshListener( () -> {

@@ -95,9 +95,9 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
     public void onClick(View v) {
         if(comment==null) {
             if (v.getId() == conflictButton.getId())
-                postComment("CONFLICT");
+                postComment(Constants.COMMENT_CONFLICT_TYPE);
             else if (v.getId() == supportButton.getId())
-                postComment("SUPPORT");
+                postComment(Constants.COMMENT_SUPPORT_TYPE);
         }else if (comment!=null){
             if(v.getId() == conflictButton.getId())
                 deleteComment(comment);
@@ -115,9 +115,9 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
                 Toast.makeText(MyApplication.getInstance(), "Minimum length for comment is 10", Toast.LENGTH_SHORT).show();
                 return;
             }
-            js.put("type", type);
-            js.put("post_uuid", postUUID );
-            js.put("comment", comment );
+            js.put(Constants.TYPE_KEY, type);
+            js.put(Constants.POST_UUID_KEY, postUUID );
+            js.put(Constants.COMMENT_KEY, comment );
 
 //            if(this.post != null){
 //                this.post.addComment(commentBox.getText().toString(), type);
@@ -127,7 +127,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
                     dismiss();
                     Toast.makeText(MyApplication.getInstance(), "Comment Posted Successfully", Toast.LENGTH_SHORT).show();
                 }, error -> {
-                Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyApplication.getInstance(), Constants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
 //                if(this.post != null){
 //                    this.post.removeComment(commentBox.getText().toString(), type);
 //                }
@@ -147,7 +147,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
                 Toast.makeText(MyApplication.getInstance(), "Comment Deleted Successfully", Toast.LENGTH_SHORT).show();
 
             }, error -> {
-                Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyApplication.getInstance(), Constants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
         });
         VolleySingelton.getInstance().getRequestQueue().add(request);
     }
@@ -156,7 +156,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         JSONObject js = new JSONObject();
         final String cm = commentBox.getText().toString();
         try {
-            js.put("comment",  cm );
+            js.put(Constants.COMMENT_KEY,  cm );
         } catch (JSONException e) {
             Utilis.exc("json", e);
         }
@@ -166,7 +166,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
                     dismiss();
                     activity.commentUpdated(comment);
                     Toast.makeText(MyApplication.getInstance(), "Comment Updated Successfully", Toast.LENGTH_SHORT).show();
-                }, error -> Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show());
+                }, error -> Toast.makeText(MyApplication.getInstance(), Constants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show());
         VolleySingelton.getInstance().getRequestQueue().add(request);
 
     }

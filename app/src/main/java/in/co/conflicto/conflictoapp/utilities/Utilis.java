@@ -23,7 +23,7 @@ public class Utilis {
 
     public static void exc( String tag, Exception e){
         Log.e(tag, "Exception: "+Log.getStackTraceString(e));
-        Toast.makeText(MyApplication.getInstance(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MyApplication.getInstance(), Constants.SOMETHING_WENT_WRONG, Toast.LENGTH_SHORT).show();
     }
 
 
