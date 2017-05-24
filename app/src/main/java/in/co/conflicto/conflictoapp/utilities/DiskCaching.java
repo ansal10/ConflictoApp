@@ -19,8 +19,15 @@ public class DiskCaching {
 
 
     private static DiskCaching ds;
+    String path;
+    File cacheDir;
     private DiskCaching(){
-
+        path = MyApplication.getInstance().getFilesDir().getPath();
+        cacheDir = new File(path, "cache_dir");
+        if (!cacheDir.exists())
+            cacheDir.mkdir();
+        for (File file:cacheDir.listFiles())
+                file.delete();
     }
 
     public static DiskCaching getInstance(){
@@ -33,9 +40,8 @@ public class DiskCaching {
     }
 
     public  void putPosts(String type, List<Post> posts){
-        String path = MyApplication.getInstance().getFilesDir().getPath();
-        String filename = path + "/" + type;
-        File f = new File(filename);
+
+        File f = new File(cacheDir, type);
         if(f.exists())
             f.delete();
 
@@ -54,9 +60,7 @@ public class DiskCaching {
     }
 
     public List<Post> getPosts(String type){
-        String path = MyApplication.getInstance().getFilesDir().getPath();
-        String filename = path + "/" + type;
-        File f = new File(filename);
+        File f = new File(cacheDir, type);
         if(f.exists()){
             try {
                 FileInputStream fis = new FileInputStream(f);
@@ -73,9 +77,7 @@ public class DiskCaching {
     }
 
     public void removePosts(String type){
-        String path = MyApplication.getInstance().getFilesDir().getPath();
-        String filename = path + "/" + type;
-        File f = new File(filename);
+        File f = new File(cacheDir, type);
         if(f.exists())
             f.delete();
     }

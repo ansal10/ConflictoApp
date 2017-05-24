@@ -143,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
                         Utilis.exc("volley", e);
                     }
                     UIUtils.hideLoader(activity);
-                    UIUtils.startActivity(activity, HomeActivity.class);
+                    Intent intent = new Intent(activity, HomeActivity.class);
+                    UIUtils.startActivity(intent, true);
                 },(VolleyError error) -> {
                     UIUtils.hideLoader(activity);
                     Utilis.exc("volley", error);

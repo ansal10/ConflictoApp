@@ -2,6 +2,7 @@ package in.co.conflicto.conflictoapp.adapters;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,8 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
+        Log.i("comment_position", position+"");
 
         Comment comment = comments.get(position);
         holder.mTimestampView.setText("5 hours ago");

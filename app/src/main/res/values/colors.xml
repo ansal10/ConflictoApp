@@ -5,8 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="conflictCommentBG">#b40009</color>
     <color name="supportCommentBG">#00ab16</color> =
-    <color name="expandButton">#0040ff</color>
-    <color name="commentLikeTextDefault">#000000</color>
-    <color name="commentLikeTextSelected">#0011f9</color>
+    <color name="expandButton">#012c64</color>
+    <color name="commentLikeTextDefault">#dfdfdf</color>
+    <color name="commentLikeTextSelected">#012c64</color>
     <color name="comment_text_color">#ffffff</color>
 </resources>
