@@ -28,7 +28,6 @@ import in.co.conflicto.conflictoapp.activities.PostDetailsActivity;
 import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Comment;
 import in.co.conflicto.conflictoapp.utilities.Constants;
-import in.co.conflicto.conflictoapp.utilities.DownloadImageTask;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
 import in.co.conflicto.conflictoapp.utilities.MyApplication;
 import in.co.conflicto.conflictoapp.utilities.SessionData;
@@ -48,6 +47,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
     private final String postUUID;
     private final PostFragmentListener fragmentListener;
     private boolean allCommentsLoaded;
+    private boolean hasComments;
     private int page;
 
     public CommentItemRecyclerViewAdapter(PostDetailsActivity activity, String postUUID, PostFragmentListener fragmentListener){
@@ -56,6 +56,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
         this.postUUID = postUUID;
         this.allCommentsLoaded = false;
         this.page = 0;
+        this.hasComments = false;
         this.fragmentListener = fragmentListener;
         this.loadComments();
     }
@@ -71,9 +72,16 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.comment_item, parent, false);
-        return new ViewHolder(view);
+        if (this.hasComments == true){
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_comment_layout, parent, false);
+            return new NoCommentViewHolder(v);
+        }else {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.comment_item, parent, false);
+            return new ViewHolder(view);
+
+        }
+
     }
 
     @Override
@@ -81,51 +89,56 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
         Log.i("comment_position", position+"");
 
-        Comment comment = comments.get(position);
-        holder.mTimestampView.setText("5 hours ago");
-        holder.mProfileNameView.setText(comment.user.name);
-        holder.mCommentView.setText(comment.comment);
-        holder.mLikeView.setText(comment.likes+" Like");
-        holder.mDislikeView.setText(comment.disLikes+" Dislike");
-        holder.mEndorseView.setText(comment.endorse+" Endorse");
-
-        holder.mLikeView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.LIKE_ACTION_KEY, position));
-        holder.mDislikeView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.DISLIKE_ACTION_KEY, position));
-        holder.mEndorseView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.ENDORSE_ACTION_KEY, position));
-        holder.mExpandView.setOnClickListener(v -> this.click(holder.mLikeView, "EXPAND", position));
+        if (!this.hasComments) {
 
 
-        // set background
-        if(comment.isConflict())
-            holder.mConstraintLayout.setBackgroundResource(R.color.conflictCommentBG);
-        else if (comment.isSupport())
-            holder.mConstraintLayout.setBackgroundResource(R.color.supportCommentBG);
+            Comment comment = comments.get(position);
+            holder.mTimestampView.setText("5 hours ago");
+            holder.mProfileNameView.setText(comment.user.name);
+            holder.mCommentView.setText(comment.comment);
+            holder.mLikeView.setText(comment.likes + " Like");
+            holder.mDislikeView.setText(comment.disLikes + " Dislike");
+            holder.mEndorseView.setText(comment.endorse + " Endorse");
 
-        // set edit button visiblity
-        if(SessionData.currentUser.uuid.equals(comment.user.uuid)) {
-            holder.mEditView.setVisibility(View.VISIBLE);
-            holder.mEditView.setOnClickListener(v -> this.click(holder.mLikeView, "EDIT", position));
+            holder.mLikeView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.LIKE_ACTION_KEY, position));
+            holder.mDislikeView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.DISLIKE_ACTION_KEY, position));
+            holder.mEndorseView.setOnClickListener(v -> this.click(holder.mLikeView, Constants.ENDORSE_ACTION_KEY, position));
+            holder.mExpandView.setOnClickListener(v -> this.click(holder.mLikeView, "EXPAND", position));
+
+
+            // set background
+            if (comment.isConflict())
+                holder.mConstraintLayout.setBackgroundResource(R.color.conflictCommentBG);
+            else if (comment.isSupport())
+                holder.mConstraintLayout.setBackgroundResource(R.color.supportCommentBG);
+
+            // set edit button visiblity
+            if (SessionData.currentUser.uuid.equals(comment.user.uuid)) {
+                holder.mEditView.setVisibility(View.VISIBLE);
+                holder.mEditView.setOnClickListener(v -> this.click(holder.mLikeView, "EDIT", position));
+            } else
+                holder.mEditView.setVisibility(View.GONE);
+
+            // set like dislikes color
+            if (comment.reactions.contains(Constants.LIKE_ACTION_KEY))
+                holder.mLikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
+            else
+                holder.mLikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
+
+            if (comment.reactions.contains(Constants.DISLIKE_ACTION_KEY))
+                holder.mDislikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
+            else
+                holder.mDislikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
+
+            if (comment.reactions.contains(Constants.ENDORSE_ACTION_KEY))
+                holder.mEndorseView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
+            else
+                holder.mEndorseView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
+
+
+            Picasso.with(MyApplication.getInstance().getBaseContext()).
+                    load(comment.user.dpLink).into(holder.mProfileImageView);
         }
-        else
-            holder.mEditView.setVisibility(View.GONE);
-
-        // set like dislikes color
-        if(comment.reactions.contains(Constants.LIKE_ACTION_KEY))
-            holder.mLikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
-        else holder.mLikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
-
-        if(comment.reactions.contains(Constants.DISLIKE_ACTION_KEY))
-            holder.mDislikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
-        else holder.mDislikeView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
-
-        if(comment.reactions.contains(Constants.ENDORSE_ACTION_KEY))
-            holder.mEndorseView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextSelected));
-        else holder.mEndorseView.setTextColor(activity.getResources().getColor(R.color.commentLikeTextDefault));
-
-
-
-        Picasso.with(MyApplication.getInstance().getBaseContext()).
-                load(comment.user.dpLink).into(holder.mProfileImageView);
 
 
     }
@@ -145,6 +158,10 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
                         JSONArray arr = response.getJSONArray("results");
                         for (int i = 0; i < arr.length(); i++) {
                             comments.add(new Comment(arr.optJSONObject(i)));
+                        }
+                        if (this.page == 0 && arr.length() == 0){
+                            this.hasComments = true;
+                            this.comments.add(null);
                         }
                         this.notifyDataSetChanged();
                         this.page++;
@@ -174,38 +191,6 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
         }
     }
 
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public final View mView;
-        public final TextView mCommentView;
-        public final TextView mExpandView;
-        public final TextView mProfileNameView;
-        public final TextView mTimestampView;
-        public final ImageView mProfileImageView;
-        public final ConstraintLayout mConstraintLayout;
-        public final TextView mEditView;
-        public final TextView mLikeView;
-        public final TextView mDislikeView;
-        public final TextView mEndorseView;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            mView = itemView;
-            mCommentView = (TextView) itemView.findViewById(R.id.comment_id);
-            mExpandView = (TextView) itemView.findViewById(R.id.expand_id);
-            mProfileImageView = (ImageView) itemView.findViewById(R.id.dp_id);
-            mProfileNameView = (TextView) itemView.findViewById(R.id.profile_name_id);
-            mTimestampView = (TextView) itemView.findViewById(R.id.post_timestamp_id);
-            mConstraintLayout = (ConstraintLayout) itemView.findViewById(R.id.comment_constrained_layout_id);
-            mEditView = (TextView) itemView.findViewById(R.id.edit_id);
-            mLikeView = (TextView) itemView.findViewById(R.id.like_id);
-            mDislikeView = (TextView) itemView.findViewById(R.id.dislike_id);
-            mEndorseView = (TextView) itemView.findViewById(R.id.endorse_id);
-        }
-    }
 
     public void click(View v, String action, int position){
         if(action.equals(Constants.LIKE_ACTION_KEY) || action.equals(Constants.DISLIKE_ACTION_KEY) || action.equals(Constants.ENDORSE_ACTION_KEY)){
@@ -263,4 +248,42 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
     public interface CommentAdapterListener{
         void popupCommentEdit(Comment comment);
     }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        final View mView;
+        final TextView mCommentView;
+        final TextView mExpandView;
+        final TextView mProfileNameView;
+        final TextView mTimestampView;
+        final ImageView mProfileImageView;
+        final ConstraintLayout mConstraintLayout;
+        final TextView mEditView;
+        final TextView mLikeView;
+        final TextView mDislikeView;
+        final TextView mEndorseView;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+
+            mView = itemView;
+            mCommentView = (TextView) itemView.findViewById(R.id.comment_id);
+            mExpandView = (TextView) itemView.findViewById(R.id.expand_id);
+            mProfileImageView = (ImageView) itemView.findViewById(R.id.dp_id);
+            mProfileNameView = (TextView) itemView.findViewById(R.id.profile_name_id);
+            mTimestampView = (TextView) itemView.findViewById(R.id.post_timestamp_id);
+            mConstraintLayout = (ConstraintLayout) itemView.findViewById(R.id.comment_constrained_layout_id);
+            mEditView = (TextView) itemView.findViewById(R.id.edit_id);
+            mLikeView = (TextView) itemView.findViewById(R.id.like_id);
+            mDislikeView = (TextView) itemView.findViewById(R.id.dislike_id);
+            mEndorseView = (TextView) itemView.findViewById(R.id.endorse_id);
+        }
+    }
+
+    private class NoCommentViewHolder extends ViewHolder {
+        NoCommentViewHolder(View v){
+            super(v);
+        }
+    }
+
 }
