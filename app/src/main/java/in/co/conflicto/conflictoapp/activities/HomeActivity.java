@@ -1,15 +1,20 @@
 package in.co.conflicto.conflictoapp.activities;
 
+import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +40,8 @@ public class HomeActivity extends AppCompatActivity implements OnListFragmentInt
      */
     private HomeTabsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private View view;
+    private ConstraintLayout searchBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +58,38 @@ public class HomeActivity extends AppCompatActivity implements OnListFragmentInt
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        searchBarLayout = (ConstraintLayout) findViewById(R.id.search_bar_view_id);
+        searchBarLayout.setVisibility(View.GONE);
+
+
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         fab.setOnClickListener((View view) -> {
             Intent intent = new Intent(this, NewPostActivity.class);
             UIUtils.startActivity(intent, false);
         });
 
+        FloatingActionButton fsb = (FloatingActionButton) findViewById(R.id.floatingSearchButton);
+        fsb.setOnClickListener((View view) -> {
+            if (searchBarLayout.getVisibility() == View.GONE) {
+                searchBarLayout.setVisibility(View.VISIBLE);
+                searchBarLayout.setFocusable(true);
+            }
+            else
+                searchBarLayout.setVisibility(View.GONE);
+        });
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (searchBarLayout.getVisibility() == View.VISIBLE)
+            searchBarLayout.setVisibility(View.GONE);
+        else
+            super.onBackPressed();
     }
 
 

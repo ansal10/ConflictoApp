@@ -69,7 +69,7 @@ public class TopRatedPostFragment extends Fragment implements PostFragmentListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_item_list, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_all_posts, container, false);
 
         // Set the adapter
         List<Post> posts = ds.getPosts(POST_TAG);
