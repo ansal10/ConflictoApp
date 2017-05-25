@@ -136,10 +136,8 @@ public class HomeActivity extends AppCompatActivity implements OnListFragmentInt
     }
 
     public void scrollToPosition(int pos){
-        PagerAdapter adapter = mViewPager.getAdapter();
         int fragmentIndex = mViewPager.getCurrentItem();
-        FragmentStatePagerAdapter fspa = (FragmentStatePagerAdapter)adapter;
-        Fragment currentFragment = fspa.getItem(fragmentIndex);
+        Fragment currentFragment = mSectionsPagerAdapter.getItem(fragmentIndex);
         ((PostFragmentListener)currentFragment).scollToPosition(pos);
     }
 

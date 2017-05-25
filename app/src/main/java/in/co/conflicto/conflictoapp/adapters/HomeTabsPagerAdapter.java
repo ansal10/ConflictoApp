@@ -57,6 +57,21 @@ public class HomeTabsPagerAdapter extends FragmentPagerAdapter{
         return null;
     }
 
+    public Fragment getFragmentAtPosition(int position){
+        switch (position) {
+            case 0:
+
+                return allPostFragment;
+
+            case 1:
+                return pinnedPostFragment;
+
+            case 2:
+                return topRatedFragment;
+        }
+        return null;
+    }
+
 
 
 }
