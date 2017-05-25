@@ -14,26 +14,38 @@ import in.co.conflicto.conflictoapp.fragments.TopRatedPostFragment;
 
 public class HomeTabsPagerAdapter extends FragmentPagerAdapter{
 
+    private Fragment allPostFragment;
+    private Fragment pinnedPostFragment;
+    private Fragment topRatedFragment;
     public HomeTabsPagerAdapter(FragmentManager fm) {
         super(fm);
+        allPostFragment = AllPostFragment.newInstance();
+        pinnedPostFragment = PinnedPostFragment.newInstance();
+        topRatedFragment = TopRatedPostFragment.newInstance();
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0: return AllPostFragment.newInstance();
+            case 0:
 
-            case 1: return PinnedPostFragment.newInstance();
+                return allPostFragment;
 
-            case 2: return TopRatedPostFragment.newInstance();
+            case 1:
+                return pinnedPostFragment;
+
+            case 2:
+                return topRatedFragment;
         }
-        return AllPostFragment.newInstance();
+        return allPostFragment;
     }
 
     @Override
     public int getCount() {
         return 3;
     }
+
+
 
     @Override
     public CharSequence getPageTitle(int position) {
@@ -44,5 +56,7 @@ public class HomeTabsPagerAdapter extends FragmentPagerAdapter{
         }
         return null;
     }
+
+
 
 }

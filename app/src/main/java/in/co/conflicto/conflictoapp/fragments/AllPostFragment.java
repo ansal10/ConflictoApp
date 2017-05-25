@@ -37,6 +37,7 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String POST_TAG = "all_posts";
     private DiskCaching ds;
+    private LinearLayoutManager linearLayoutManager;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -77,7 +78,8 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
 
         Context context = mSwipeRefreshLayout.getContext();
         RecyclerView recyclerView = (RecyclerView) mSwipeRefreshLayout.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        linearLayoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(linearLayoutManager);
         this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener, postFragmentListener, posts);
         recyclerView.setAdapter(postAdapter);
 
@@ -126,6 +128,11 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
     @Override
     public void refreshStarted() {
         mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void scollToPosition(int pos) {
+        linearLayoutManager.scrollToPosition(pos);
     }
 
 

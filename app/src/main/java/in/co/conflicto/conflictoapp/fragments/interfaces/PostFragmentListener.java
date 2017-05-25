@@ -7,4 +7,5 @@ package in.co.conflicto.conflictoapp.fragments.interfaces;
 public interface PostFragmentListener{
     void refreshCompleted();
     void refreshStarted();
+    void scollToPosition(int pos);
 }

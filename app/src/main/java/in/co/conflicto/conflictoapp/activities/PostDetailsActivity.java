@@ -88,6 +88,11 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
     }
 
     @Override
+    public void scollToPosition(int pos) {
+
+    }
+
+    @Override
     public void onClick(View v) {
         if(v.getId() == commentLabel.getId()){
             FragmentManager fragmentManager = getSupportFragmentManager();

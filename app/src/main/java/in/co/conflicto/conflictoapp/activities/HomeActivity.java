@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -22,13 +25,13 @@ import android.view.View;
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
 import in.co.conflicto.conflictoapp.fragments.interfaces.OnListFragmentInteractionListener;
+import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.adapters.HomeTabsPagerAdapter;
 
-public class HomeActivity extends AppCompatActivity implements OnListFragmentInteractionListener
-                    {
+public class HomeActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -54,6 +57,7 @@ public class HomeActivity extends AppCompatActivity implements OnListFragmentInt
         // primary sections of the activity.
         mSectionsPagerAdapter = new HomeTabsPagerAdapter(getSupportFragmentManager());
 
+
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -76,7 +80,7 @@ public class HomeActivity extends AppCompatActivity implements OnListFragmentInt
         fsb.setOnClickListener((View view) -> {
             if (searchBarLayout.getVisibility() == View.GONE) {
                 searchBarLayout.setVisibility(View.VISIBLE);
-                searchBarLayout.setFocusable(true);
+                scrollToPosition(0);
             }
             else
                 searchBarLayout.setVisibility(View.GONE);
@@ -130,6 +134,16 @@ public class HomeActivity extends AppCompatActivity implements OnListFragmentInt
         fragment.show(fragmentManager, CommentDialogFragment.class.toString());
 
     }
+
+    public void scrollToPosition(int pos){
+        PagerAdapter adapter = mViewPager.getAdapter();
+        int fragmentIndex = mViewPager.getCurrentItem();
+        FragmentStatePagerAdapter fspa = (FragmentStatePagerAdapter)adapter;
+        Fragment currentFragment = fspa.getItem(fragmentIndex);
+        ((PostFragmentListener)currentFragment).scollToPosition(pos);
+    }
+
+
 }
 
 

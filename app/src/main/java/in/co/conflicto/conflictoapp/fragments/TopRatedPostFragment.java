@@ -36,6 +36,7 @@ public class TopRatedPostFragment extends Fragment implements PostFragmentListen
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String POST_TAG = "top_rated_post";
     private DiskCaching ds;
+    private LinearLayoutManager linearLayoutManager;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -75,7 +76,8 @@ public class TopRatedPostFragment extends Fragment implements PostFragmentListen
         List<Post> posts = ds.getPosts(POST_TAG);
         Context context = mSwipeRefreshLayout.getContext();
         RecyclerView recyclerView = (RecyclerView) mSwipeRefreshLayout.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        linearLayoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(linearLayoutManager);
         this.postAdapter = new PostItemRecyclerViewAdapter(this.activity, mListener, postFragmentListener, posts);
         recyclerView.setAdapter(postAdapter);
 
@@ -124,6 +126,10 @@ public class TopRatedPostFragment extends Fragment implements PostFragmentListen
         mSwipeRefreshLayout.setRefreshing(true);
     }
 
+    @Override
+    public void scollToPosition(int pos) {
+        linearLayoutManager.scrollToPosition(pos);
+    }
 
     /**
      * This interface must be implemented by activities that contain this
