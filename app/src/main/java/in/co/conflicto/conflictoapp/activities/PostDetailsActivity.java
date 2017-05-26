@@ -2,11 +2,15 @@ package in.co.conflicto.conflictoapp.activities;
 
 import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,6 +36,11 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_details);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+
         postUUID = getIntent().getStringExtra(Constants.POST_UUID_KEY);
 
         if(postUUID == null)
@@ -116,5 +125,14 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
     @Override
     public void commentDeleted(Comment comment) {
         adapter.commentDeleted(comment);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i("home", item.getItemId()+"<>"+android.R.id.home);
+        if (item.getItemId() == android.R.id.home){
+            NavUtils.navigateUpFromSameTask(this);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

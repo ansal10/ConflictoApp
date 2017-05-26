@@ -17,11 +17,18 @@ public class HomeTabsPagerAdapter extends FragmentPagerAdapter{
     private Fragment allPostFragment;
     private Fragment pinnedPostFragment;
     private Fragment topRatedFragment;
-    public HomeTabsPagerAdapter(FragmentManager fm) {
+    private static HomeTabsPagerAdapter instance;
+    private HomeTabsPagerAdapter(FragmentManager fm) {
         super(fm);
         allPostFragment = AllPostFragment.newInstance();
         pinnedPostFragment = PinnedPostFragment.newInstance();
         topRatedFragment = TopRatedPostFragment.newInstance();
+    }
+
+    public static HomeTabsPagerAdapter getInstance(FragmentManager fm){
+        if (instance == null)
+            instance = new HomeTabsPagerAdapter(fm);
+        return instance;
     }
 
     @Override
