@@ -80,10 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if (accessToken !=null){
-            handleFacebookAccessToken(accessToken);
-        }
+
     }
 
     @Override
@@ -92,6 +89,17 @@ public class MainActivity extends AppCompatActivity {
 
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UIUtils.showLoader(this);
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        UIUtils.hideLoader(this);
+        if (accessToken !=null){
+            handleFacebookAccessToken(accessToken);
+        }
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
