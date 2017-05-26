@@ -3,6 +3,7 @@ package in.co.conflicto.conflictoapp.utilities;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 
@@ -18,6 +19,7 @@ import java.util.Map;
 public class JsonObjectRequestWithAuth extends JsonObjectRequest {
     public JsonObjectRequestWithAuth(int method, String url, JSONObject requestBody, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
         super(method, url, requestBody, listener, errorListener);
+        this.setRetryPolicy(new DefaultRetryPolicy(5000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     @Override

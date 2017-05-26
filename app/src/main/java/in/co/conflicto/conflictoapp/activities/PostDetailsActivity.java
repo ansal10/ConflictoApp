@@ -129,10 +129,10 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i("home", item.getItemId()+"<>"+android.R.id.home);
         if (item.getItemId() == android.R.id.home){
-            NavUtils.navigateUpFromSameTask(this);
-        }
-        return super.onOptionsItemSelected(item);
+            onBackPressed();
+            return true;
+        }else
+            return super.onOptionsItemSelected(item);
     }
 }

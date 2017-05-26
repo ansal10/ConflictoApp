@@ -6,7 +6,7 @@ package in.co.conflicto.conflictoapp.utilities;
  */
 
 public class Constants {
-    public static final String SERVER_URL = "http://192.168.0.101:8000/conflicto";
+    public static final String SERVER_URL = "http://ec2-54-69-125-204.us-west-2.compute.amazonaws.com:8001/conflicto";
 
     public static final String OTHER_USER_FCM_TOKEN = "other_user_fcm_token";
     public static String SHOW_LOGOUT_SCREEN = "show_logout_screen";

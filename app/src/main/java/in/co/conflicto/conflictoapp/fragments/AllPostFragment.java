@@ -108,11 +108,6 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
         super.onStop();
     }
 
-    @Override
-    public void onDestroy() {
-        ds.removePosts(POST_TAG);
-        super.onDestroy();
-    }
 
     @Override
     public void onDetach() {

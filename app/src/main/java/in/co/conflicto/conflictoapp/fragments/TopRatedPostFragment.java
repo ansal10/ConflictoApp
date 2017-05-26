@@ -88,12 +88,6 @@ public class TopRatedPostFragment extends Fragment implements PostFragmentListen
         return mSwipeRefreshLayout;
     }
 
-    @Override
-    public void onDestroy() {
-        ds.removePosts(POST_TAG);
-        super.onDestroy();
-    }
-
 
     @Override
     public void onStop() {

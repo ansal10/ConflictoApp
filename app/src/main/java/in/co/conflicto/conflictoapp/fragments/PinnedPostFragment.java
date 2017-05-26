@@ -99,13 +99,6 @@ public class PinnedPostFragment extends Fragment implements PostFragmentListener
     }
 
     @Override
-    public void onDestroy() {
-        ds.removePosts(POST_TAG);
-        super.onDestroy();
-    }
-
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mListener = (OnListFragmentInteractionListener) context;

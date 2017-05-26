@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +43,10 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_new_post);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         view = findViewById(R.id.new_post_activity_root_view_id);
         submitButton = (TextView) view.findViewById(R.id.post_submit_button_id);
         titleEditText = (EditText) view.findViewById(R.id.new_post_title_id);
@@ -98,5 +104,14 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
         } catch (JSONException e) {
             Utilis.exc("json", e);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+            return true;
+        }else
+            return super.onOptionsItemSelected(item);
     }
 }
