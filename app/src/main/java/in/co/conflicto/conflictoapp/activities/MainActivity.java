@@ -105,9 +105,7 @@ public class MainActivity extends AppCompatActivity {
     private void handleFacebookAccessToken(AccessToken token) {
         accessToken = token;
         credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+        mAuth.signInWithCredential(credential).addOnCompleteListener(task ->  {
 
                 // If sign in fails, display a message to the user. If sign in succeeds
                 // the auth state listener will be notified and logic to handle the
@@ -118,8 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     processFirebaseAuthenticationToBackend();
                 }
-            }
-        });
+            });
     }
 
     private void processFirebaseAuthenticationToBackend() {

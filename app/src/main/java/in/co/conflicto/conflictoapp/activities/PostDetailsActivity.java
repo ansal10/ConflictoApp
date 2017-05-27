@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -17,12 +19,13 @@ import android.widget.TextView;
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.CommentItemRecyclerViewAdapter;
 import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
+import in.co.conflicto.conflictoapp.fragments.interfaces.CommentsActionListener;
 import in.co.conflicto.conflictoapp.fragments.interfaces.DialogBoxListenerInterface;
 import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Comment;
 import in.co.conflicto.conflictoapp.utilities.Constants;
 
-public class PostDetailsActivity extends AppCompatActivity implements PostFragmentListener, View.OnClickListener,
+public class PostDetailsActivity extends AppCompatActivity implements CommentsActionListener, View.OnClickListener,
         CommentItemRecyclerViewAdapter.CommentAdapterListener,
         DialogBoxListenerInterface {
 
@@ -102,6 +105,13 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_comments, menu);
+        return true;
+    }
+
+    @Override
     public void onClick(View v) {
         if(v.getId() == commentLabel.getId()){
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -129,10 +139,22 @@ public class PostDetailsActivity extends AppCompatActivity implements PostFragme
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        int itemClickedId = item.getItemId();
+        if (itemClickedId == android.R.id.home)
             onBackPressed();
-            return true;
-        }else
-            return super.onOptionsItemSelected(item);
+        else if (itemClickedId == R.id.action_conflict_comments_id)
+            adapter.filterBy(CommentItemRecyclerViewAdapter.CONFLICTS_COMMENTS);
+        else if (itemClickedId == R.id.action_support_comments_id)
+            adapter.filterBy(CommentItemRecyclerViewAdapter.SUPPORTS_COMMENTS);
+        else if (itemClickedId == R.id.action_self_comments_id)
+            adapter.filterBy(CommentItemRecyclerViewAdapter.OWN_COMMENTS);
+        else if (itemClickedId == R.id.action_sort_by_actions)
+            adapter.sortBy(CommentItemRecyclerViewAdapter.SORT_POPULAR_FIRST);
+        else if (itemClickedId == R.id.action_sort_by_latest)
+            adapter.sortBy(CommentItemRecyclerViewAdapter.SORT_RECENT_FIRST);
+        else if (itemClickedId == R.id.action_all_comments_id)
+            adapter.filterBy(CommentItemRecyclerViewAdapter.ALL_COMMENTS);
+        else return super.onOptionsItemSelected(item);
+        return true;
     }
 }

@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity implements OnListFragmentInt
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        searchBarLayout = (ConstraintLayout) findViewById(R.id.search_bar_view_id);
+//        searchBarLayout = (ConstraintLayout) findViewById(R.id.search_bar_view_id);
         searchBarLayout.setVisibility(View.GONE);
 
 

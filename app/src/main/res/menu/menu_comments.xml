@@ -1,0 +1,41 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_conflict_comments_id"
+        android:title="Conflicts"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_support_comments_id"
+        android:title="Supports"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_self_comments_id"
+        android:title="Own Comments"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_all_comments_id"
+        android:title="All Comments"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_sort_by_latest"
+        android:title="Recent First"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sort_by_actions"
+        android:title="Popular First"
+        app:showAsAction="never" />
+
+
+
+</menu>

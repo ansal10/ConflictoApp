@@ -1,5 +1,6 @@
 package in.co.conflicto.conflictoapp.adapters;
 
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,11 +21,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.activities.PostDetailsActivity;
+import in.co.conflicto.conflictoapp.fragments.interfaces.CommentsActionListener;
 import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Comment;
 import in.co.conflicto.conflictoapp.utilities.Constants;
@@ -42,24 +46,34 @@ import in.co.conflicto.conflictoapp.utilities.VolleySingelton;
 public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<CommentItemRecyclerViewAdapter.ViewHolder> {
 
 
+    public static final int SORT_RECENT_FIRST = 1;
+    public static final int SORT_POPULAR_FIRST = 2;
+    public static final int ALL_COMMENTS = 3;
+    public static final int CONFLICTS_COMMENTS = 4;
+    public static final int SUPPORTS_COMMENTS = 5;
+    public static final int OWN_COMMENTS = 6;
     private final List<Comment> comments;
+    private final List<Comment> commentsBckup;
     private final PostDetailsActivity activity;
     private final String postUUID;
-    private final PostFragmentListener fragmentListener;
+    private final CommentsActionListener commentsActionListener;
     private boolean allCommentsLoaded;
     private boolean hasComments;
     private int page;
 
-    public CommentItemRecyclerViewAdapter(PostDetailsActivity activity, String postUUID, PostFragmentListener fragmentListener){
+    public CommentItemRecyclerViewAdapter(PostDetailsActivity activity, String postUUID, CommentsActionListener commentsActionListener){
         comments = new LinkedList<>();
+        commentsBckup = new LinkedList<>();
         this.activity = activity;
         this.postUUID = postUUID;
         this.allCommentsLoaded = false;
         this.page = 0;
         this.hasComments = false;
-        this.fragmentListener = fragmentListener;
+        this.commentsActionListener = commentsActionListener;
         this.loadComments();
     }
+
+
 
     public void refresh() {
         this.allCommentsLoaded = false;
@@ -151,7 +165,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
     public void loadComments(){
         if (!this.allCommentsLoaded) {
             RequestQueue queue = VolleySingelton.getInstance().getRequestQueue();
-            fragmentListener.refreshStarted();
+            commentsActionListener.refreshStarted();
             JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.GET, Constants.SERVER_URL + "/comment/"+postUUID, null,
                 (JSONObject response) -> {
                     try {
@@ -168,21 +182,21 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
                         if (arr.length() < 25) {
                             this.allCommentsLoaded = true;
                         }
-                        fragmentListener.refreshCompleted();
+                        commentsActionListener.refreshCompleted();
 
 
                     } catch (JSONException e) {
                         Utilis.exc("volley", e);
-                        fragmentListener.refreshCompleted();
+                        commentsActionListener.refreshCompleted();
 
                     }
                     UIUtils.hideLoader(activity);
-                    fragmentListener.refreshCompleted();
+                    commentsActionListener.refreshCompleted();
 
                 }, (VolleyError error) -> {
 
                 UIUtils.hideLoader(activity);
-                fragmentListener.refreshCompleted();
+                commentsActionListener.refreshCompleted();
                 Utilis.exc("volley", error);
             });
 
@@ -285,5 +299,53 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
             super(v);
         }
     }
+
+    public void sortBy(int field){
+        class CommentComparator implements Comparator<Comment> {
+            @Override
+            public int compare(Comment a, Comment b) {
+                if (field == SORT_RECENT_FIRST)
+                    return a.uuid.compareTo(b.uuid);
+                else if (field == SORT_POPULAR_FIRST)
+                    return  (b.likes + b.endorse + b.disLikes) - (a.likes + a.disLikes + a.endorse);
+                return 0;
+            }
+        }
+        Collections.sort(comments, new CommentComparator());
+        this.notifyDataSetChanged();
+
+    }
+
+    public void filterBy(int field){
+        if (commentsBckup.size() == 0) {
+            commentsBckup.clear();
+            for (Comment c : comments) {
+                commentsBckup.add(c);
+            }
+        }
+        comments.clear();
+        for (Comment c:commentsBckup){
+            if (field == CONFLICTS_COMMENTS) {
+                if (c.type.equals(Constants.COMMENT_CONFLICT_TYPE))
+                    comments.add(c);
+            }
+            else if (field == SUPPORTS_COMMENTS) {
+                if (c.type.equals(Constants.COMMENT_SUPPORT_TYPE))
+                    comments.add(c);
+            }
+            else if (field == OWN_COMMENTS) {
+                if (c.user.uuid.equals(SessionData.currentUser.uuid))
+                    comments.add(c);
+            }
+            else if (field == ALL_COMMENTS){
+                comments.add(c);
+            }
+        }
+        if (field == ALL_COMMENTS){
+            commentsBckup.clear();
+        }
+        this.notifyDataSetChanged();
+    }
+
 
 }
