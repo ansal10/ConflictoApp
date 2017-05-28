@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.HomeTabsPagerAdapter;
@@ -151,5 +153,31 @@ public class HomeNavActivity extends AppCompatActivity
         int fragmentIndex = mViewPager.getCurrentItem();
         Fragment currentFragment = mSectionsPagerAdapter.getItem(fragmentIndex);
         ((PostFragmentListener)currentFragment).scollToPosition(pos);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem searchViewMenuItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchViewMenuItem.getActionView();
+        ImageView v = (ImageView) searchView.findViewById(android.support.v7.appcompat.R.id.search_button);
+        v.setImageResource(R.drawable.search_icon); //Changing the image
+        searchView.setQueryHint("Search Something");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//                if(newText.isEmpty())
+                return false;
+            }
+        });
+
+        return true;
+
     }
 }
