@@ -86,7 +86,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (this.hasComments == true){
+        if (this.hasComments){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_comment_layout, parent, false);
             return new NoCommentViewHolder(v);
         }else {
