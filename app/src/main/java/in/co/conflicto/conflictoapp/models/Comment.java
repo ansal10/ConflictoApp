@@ -18,6 +18,8 @@ import in.co.conflicto.conflictoapp.utilities.Utilis;
  */
 
 public class Comment implements Serializable {
+
+    public Boolean expanded;
     public String comment;
     public Integer likes;
     public Integer disLikes;
@@ -29,8 +31,11 @@ public class Comment implements Serializable {
     public String uuid;
     public User user;
 
+
+
     public Comment(JSONObject obj){
         try {
+            expanded = false;
             comment = obj.getString(Constants.COMMENT_KEY);
             likes = obj.getInt(Constants.LIKES_KEY);
             disLikes = obj.getInt(Constants.DISLIKES_KEY);
@@ -82,5 +87,18 @@ public class Comment implements Serializable {
         }
     }
 
+    public void flipExpand(){
+        this.expanded = !this.expanded;
+    }
 
+
+    public String getComment() {
+        if (expanded || comment.length() <= Constants.UNEXPANDED_LENGTH)
+            return comment;
+         else return comment.substring(0,Constants.UNEXPANDED_LENGTH) + ".....";
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }

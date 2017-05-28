@@ -1,11 +1,11 @@
 <shape
     xmlns:android="http://schemas.android.com/apk/res/android">
     <solid
-        android:color="#fffb00">
+        android:color="@color/action_popup_background">
     </solid>
     <stroke
         android:width="0dp"
-        android:color="#fffb00">
+        android:color="@color/action_popup_background">
     </stroke>
     <corners
         android:topLeftRadius="100dip"

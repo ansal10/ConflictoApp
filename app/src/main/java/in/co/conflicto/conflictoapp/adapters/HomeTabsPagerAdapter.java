@@ -20,7 +20,7 @@ public class HomeTabsPagerAdapter extends FragmentPagerAdapter{
     private static HomeTabsPagerAdapter instance;
     private HomeTabsPagerAdapter(FragmentManager fm) {
         super(fm);
-        allPostFragment = AllPostFragment.newInstance();
+        allPostFragment = AllPostFragment.getInstance();
         pinnedPostFragment = PinnedPostFragment.newInstance();
         topRatedFragment = TopRatedPostFragment.newInstance();
     }

@@ -79,7 +79,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         supportButton.setOnClickListener(this);
 
         if(comment != null){
-            commentBox.setText(comment.comment);
+            commentBox.setText(comment.getComment());
             conflictButton.setText("DELETE");
             supportButton.setText("UPDATE");
         }
@@ -162,7 +162,7 @@ public class CommentDialogFragment extends DialogFragment implements View.OnClic
         }
         JsonObjectRequest request = new JsonObjectRequestWithAuth(Request.Method.PUT, Constants.SERVER_URL+ "/comment/" + comment.uuid , js,
                 response -> {
-                    comment.comment = cm;
+                    comment.setComment(cm) ;
                     dismiss();
                     activity.commentUpdated(comment);
                     Toast.makeText(MyApplication.getInstance(), "Comment Updated Successfully", Toast.LENGTH_SHORT).show();

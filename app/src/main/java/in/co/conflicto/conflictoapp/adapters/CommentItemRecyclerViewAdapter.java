@@ -109,7 +109,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
             Comment comment = comments.get(position);
             holder.mTimestampView.setText("5 hours ago");
             holder.mProfileNameView.setText(comment.user.name);
-            holder.mCommentView.setText(comment.comment);
+            holder.mCommentView.setText(comment.getComment());
             holder.mLikeView.setText(comment.likes + " Like");
             holder.mDislikeView.setText(comment.disLikes + " Dislike");
             holder.mEndorseView.setText(comment.endorse + " Endorse");
@@ -122,9 +122,9 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
             // set background
             if (comment.isConflict())
-                holder.mConstraintLayout.setBackgroundResource(R.color.conflictCommentBG);
+                holder.mConstraintLayout.setBackgroundResource(R.drawable.conflict_bg_gradient);
             else if (comment.isSupport())
-                holder.mConstraintLayout.setBackgroundResource(R.color.supportCommentBG);
+                holder.mConstraintLayout.setBackgroundResource(R.drawable.support_bg_gradient);
 
             // set edit button visiblity
             if (SessionData.currentUser.uuid.equals(comment.user.uuid)) {
@@ -132,6 +132,18 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
                 holder.mEditView.setOnClickListener(v -> this.click(holder.mLikeView, "EDIT", position));
             } else
                 holder.mEditView.setVisibility(View.GONE);
+
+            //set expand button
+            if (comment.comment.length() > Constants.UNEXPANDED_LENGTH){
+                holder.mExpandView.setVisibility(View.VISIBLE);
+                holder.mExpandView.setOnClickListener(v->{
+                    comment.flipExpand();
+                    this.notifyItemChanged(position);
+                });
+            }else{
+                holder.mExpandView.setVisibility(View.GONE);
+            }
+
 
             // set like dislikes color
             if (comment.reactions.contains(Constants.LIKE_ACTION_KEY))

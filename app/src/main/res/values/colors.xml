@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#01c134</color>
-    <color name="colorPrimaryDark">#008122</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="conflictCommentBG">#b40009</color>
-    <color name="supportCommentBG">#00ab16</color> =
-    <color name="expandButton">#012c64</color>
-    <color name="commentLikeTextDefault">#dfdfdf</color>
-    <color name="commentLikeTextSelected">#012c64</color>
+    <color name="colorPrimary">#2E7D32</color>
+    <color name="colorPrimaryDark">#1B5E20</color>
+    <color name="colorAccent">#2E7D32</color>
+    <color name="conflictCommentBG">#E53935</color>
+    <color name="supportCommentBG">#00897B</color>
+    <color name="expandButton">#303F9F</color>
+    <color name="commentLikeTextDefault">#000000</color>
+    <color name="commentLikeTextSelected">#303F9F</color>
     <color name="comment_text_color">#ffffff</color>
+    <color name="action_popup_background">#FFF59D</color>
+    <color name="post_background">#ECEFF1</color>
 </resources>

@@ -32,12 +32,14 @@ public class Post implements Serializable {
     public Integer conflicts ;
     public Integer reports ;
     public List<String> reactions;
+    public Boolean expanded;
+
     public User user;
 
     public Post(JSONObject obj){
 
         try {
-
+            expanded = false;
             this.title = obj.getString(Constants.TITLE_KEY);
             this.description = obj.getString(Constants.DESCRIPTION_KEY);
             this.category = obj.getString(Constants.CATEGORY_KEY);
@@ -107,5 +109,19 @@ public class Post implements Serializable {
         this.title = title;
         this.description = description;
         this.uuid = uuid;
+    }
+
+    public void flipExpand(){
+        this.expanded = !this.expanded;
+    }
+
+    public String getDescription() {
+        if (expanded || description.length() <= Constants.UNEXPANDED_LENGTH)
+            return description;
+        else return description.substring(0,Constants.UNEXPANDED_LENGTH) + ".....";
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

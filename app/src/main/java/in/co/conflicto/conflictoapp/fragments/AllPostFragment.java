@@ -38,6 +38,7 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
     private String POST_TAG = "all_posts";
     private DiskCaching ds;
     private LinearLayoutManager linearLayoutManager;
+    private static AllPostFragment fragmentInstance;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -47,10 +48,11 @@ public class AllPostFragment extends Fragment implements PostFragmentListener {
     }
 
     // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static AllPostFragment newInstance() {
-        AllPostFragment fragment = new AllPostFragment();
-        return fragment;
+    public static AllPostFragment getInstance() {
+        if (fragmentInstance == null) {
+            fragmentInstance = new AllPostFragment();
+        }
+        return fragmentInstance;
     }
 
     @Override

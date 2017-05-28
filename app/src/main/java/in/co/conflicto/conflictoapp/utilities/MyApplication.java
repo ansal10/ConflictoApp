@@ -20,6 +20,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
         diskCachingInstance = DiskCaching.getInstance();
 
     }

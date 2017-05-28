@@ -37,7 +37,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="John Cena"
-                android:textAlignment="textStart"
+                android:textAlignment="viewStart"
                 android:textColor="#001aff"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -49,29 +49,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
                 android:text="2 mins ago"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="10sp"
+                android:layout_marginLeft="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/profile_name_id"
+                android:layout_marginTop="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/profile_name_id" />
 
             <TextView
                 android:id="@+id/new_post_title_id"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="This is just a intro line"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:minHeight="70dp"
+                android:text="This is just a intro line which can be of variable lenght. basicaly i wanted to see if it can be wrapped around the image"
+                android:textAllCaps="false"
+                android:textColor="#000000"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/dp_id"
+                android:textStyle="italic"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/dp_id"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_name_id" />
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/post_timestamp_id" />
 
             <TextView
                 android:id="@+id/new_post_description_id"
@@ -89,7 +92,7 @@
                 android:textSize="16sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dp_id" />
+                app:layout_constraintTop_toBottomOf="@+id/new_post_title_id" />
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
@@ -104,7 +107,7 @@
 
 
             <LinearLayout
-                android:id="@+id/linearLayout"
+                android:id="@+id/post_action_details_layout_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -242,7 +245,7 @@
 
 
             <LinearLayout
-                android:id="@+id/linearLayout5"
+                android:id="@+id/post_comments_details_layout_id"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -254,7 +257,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+                app:layout_constraintTop_toBottomOf="@+id/post_action_details_layout_id">
 
                 <TextView
                     android:id="@+id/conflict_id"
@@ -263,6 +266,7 @@
                     android:layout_weight="1"
                     android:text="3 Conflict"
                     android:textAlignment="center"
+                    android:textColor="@color/conflictCommentBG"
                     android:textSize="16sp" />
 
                 <TextView
@@ -271,6 +275,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="5 Support"
+                    android:textColor="@color/supportCommentBG"
                     android:textAlignment="center"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -285,7 +290,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+                app:layout_constraintTop_toBottomOf="@+id/post_comments_details_layout_id" />
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
@@ -441,6 +446,18 @@
                         app:layout_constraintRight_toLeftOf="@+id/endorse_action_id" />
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/post_option_menu_id"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:text="&#8942;"
+                android:textAlignment="center"
+                android:textAppearance="?android:textAppearanceLarge"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </android.support.constraint.ConstraintLayout>

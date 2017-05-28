@@ -2,8 +2,13 @@ package in.co.conflicto.conflictoapp.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +39,7 @@ import in.co.conflicto.conflictoapp.utilities.Constants;
 import in.co.conflicto.conflictoapp.utilities.DownloadImageTask;
 import in.co.conflicto.conflictoapp.utilities.JsonObjectRequestWithAuth;
 import in.co.conflicto.conflictoapp.utilities.MyApplication;
+import in.co.conflicto.conflictoapp.utilities.SessionData;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 import in.co.conflicto.conflictoapp.utilities.Utilis;
 import in.co.conflicto.conflictoapp.utilities.VolleySingelton;
@@ -84,7 +90,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         holder.mPostTimestampView.setText("posted 2 mins ago");
         holder.mProfileNameView.setText(post.user.name);
         holder.mPostTitleView.setText(post.title);
-        holder.mPostDescriptionView.setText(post.description);
+        holder.mPostDescriptionView.setText(post.getDescription());
         holder.mLikesView.setText(post.likes +"");
         holder.mDislikeView.setText(post.dislikes+ "");
         holder.mEndorseView.setText(post.endorse+"");
@@ -92,10 +98,17 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         holder.mSupportView.setText(post.supports+" Supports");
         holder.mActionPopup.setVisibility(View.GONE);
 
-        holder.mView.setOnClickListener(v -> {
-            if (mListener != null) {
-                mListener.onListFragmentInteraction(post);
-            }
+        holder.mPostDescriptionView.setOnClickListener(v -> mListener.onListFragmentInteraction(post));
+
+        holder.mPostTitleView.setOnClickListener(v -> mListener.onListFragmentInteraction(post));
+
+        holder.mCommentDetailsLayoutView.setOnClickListener(v -> mListener.onListFragmentInteraction(post));
+
+        holder.mActionDetailsLayoutView.setOnClickListener(v->{
+            if(holder.mActionPopup.getVisibility() == View.GONE)
+                holder.mActionPopup.setVisibility(View.VISIBLE);
+            else
+                holder.mActionPopup.setVisibility(View.GONE);
         });
 
         if(post.reactions.size() > 0)
@@ -134,6 +147,42 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
             this.notifyItemChanged(position);
         });
 
+
+        //set expand button
+//        if (post.getDescription().length()>Constants.UNEXPANDED_LENGTH){
+//            holder.mExpandView.setVisibility(View.VISIBLE);
+//            holder.mExpandView.setOnClickListener(v->{
+//                post.flipExpand();
+//                this.notifyItemChanged(position);
+//            });
+//        }else{
+//            holder.mExpandView.setVisibility(View.GONE);
+//        }
+
+
+        // popup action bar
+        holder.mPostOptionMenuView.setOnClickListener(v->{
+            PopupMenu popup = new PopupMenu(activity, holder.mPostOptionMenuView, Gravity.RIGHT);
+            popup.getMenuInflater().inflate(R.menu.menu_post_actions, popup.getMenu());
+            Menu menu = popup.getMenu();
+            if (post.user.uuid.equals(SessionData.currentUser.uuid)){
+                menu.removeItem(R.id.action_post_edit_id);
+                menu.removeItem(R.id.action_post_delete_id);
+            }
+            popup.setOnMenuItemClickListener((MenuItem item)-> {
+                if (item.getItemId() == R.id.action_post_edit_id){
+
+                }else if (item.getItemId() == R.id.action_post_delete_id){
+
+                }
+                else if (item.getItemId() == R.id.action_post_expand_id){
+                    post.flipExpand();
+                    this.notifyItemChanged(position);
+                }
+                return true;
+            });
+            popup.show();
+        });
 
         // Set color of actions
         if(post.reactions.contains( Constants.LIKE_ACTION_KEY) )
@@ -216,12 +265,17 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         public final TextView mDislikeActionView;
         public final TextView mEndorseActionView;
         public final TextView mReportActionView;
+        public final View mActionDetailsLayoutView;
+        public final View mCommentDetailsLayoutView;
+        public final TextView mPostOptionMenuView;
 
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
 
+            mActionDetailsLayoutView = view.findViewById(R.id.post_action_details_layout_id);
+            mCommentDetailsLayoutView = view.findViewById(R.id.post_comments_details_layout_id);
             mProfileNameView = (TextView) view.findViewById(R.id.profile_name_id);
             mPostTimestampView = (TextView) view.findViewById(R.id.post_timestamp_id);
             mPostTitleView = (TextView) view.findViewById(R.id.new_post_title_id);
@@ -239,6 +293,9 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
             mDislikeActionView = (TextView) mActionPopup.findViewById(R.id.dislike_action_id);
             mEndorseActionView = (TextView) mActionPopup.findViewById(R.id.endorse_action_id);
             mReportActionView = (TextView) mActionPopup.findViewById(R.id.report_action_id);
+            mPostOptionMenuView = (TextView) view.findViewById(R.id.post_option_menu_id);
+
+
 
         }
 

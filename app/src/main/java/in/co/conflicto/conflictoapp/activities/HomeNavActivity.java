@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.view.View;
@@ -20,14 +21,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.HomeTabsPagerAdapter;
+import in.co.conflicto.conflictoapp.fragments.AllPostFragment;
 import in.co.conflicto.conflictoapp.fragments.CommentDialogFragment;
 import in.co.conflicto.conflictoapp.fragments.interfaces.OnListFragmentInteractionListener;
 import in.co.conflicto.conflictoapp.fragments.interfaces.PostFragmentListener;
 import in.co.conflicto.conflictoapp.models.Post;
 import in.co.conflicto.conflictoapp.utilities.Constants;
+import in.co.conflicto.conflictoapp.utilities.SessionData;
 import in.co.conflicto.conflictoapp.utilities.UIUtils;
 
 public class HomeNavActivity extends AppCompatActivity
@@ -36,6 +40,7 @@ public class HomeNavActivity extends AppCompatActivity
     private HomeTabsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private ConstraintLayout searchBarLayout;
+    private String FRAGMENT_TAG = "fragment_tag";
 
 
     @Override
@@ -60,19 +65,31 @@ public class HomeNavActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mSectionsPagerAdapter = HomeTabsPagerAdapter.getInstance(getSupportFragmentManager());
 
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-//        searchBarLayout = (ConstraintLayout) findViewById(R.id.search_bar_view_id);
-//        searchBarLayout.setVisibility(View.GONE);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TextView navProfileNameView = ((TextView)findViewById(R.id.nav_profile_name_id));
+        if (navProfileNameView!=null)
+            navProfileNameView.setText(SessionData.currentUser.name);
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(FRAGMENT_TAG);
+        if (fragment == null) {
+            FragmentTransaction ft = fm.beginTransaction();
+            fragment =AllPostFragment.getInstance();
+            ft.add(R.id.post_container,fragment,FRAGMENT_TAG);
+            ft.commit();
+        }else {
+            FragmentTransaction ft = fm.beginTransaction();
+            fragment =AllPostFragment.getInstance();
+            ft.replace(R.id.post_container,fragment,FRAGMENT_TAG);
+            ft.commit();
+        }
     }
 
     @Override
