@@ -3,6 +3,9 @@ package in.co.conflicto.conflictoapp.models;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +22,8 @@ import in.co.conflicto.conflictoapp.utilities.Utilis;
 
 public class Comment implements Serializable {
 
+    public Integer id;
+    public DateTime createdOn;
     public Boolean expanded;
     public String comment;
     public Integer likes;
@@ -45,11 +50,11 @@ public class Comment implements Serializable {
             reactions = new ObjectMapper().readValue(obj.getString(Constants.REACTIONS_KEY), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
             type = obj.getString(Constants.TYPE_KEY);
             uuid = obj.getString(Constants.UUID_KEY);
+            id = obj.getInt("id");
+            createdOn = new DateTime( obj.getString("created_on") );
             user = new User(obj.getJSONObject(Constants.USER_KEY).getJSONObject(Constants.FBPROFILE_KEY));
 
-        } catch (JSONException e) {
-            Utilis.exc("json", e);
-        }catch (IOException e){
+        } catch (JSONException | IOException e) {
             Utilis.exc("json", e);
         }
     }
@@ -100,5 +105,21 @@ public class Comment implements Serializable {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getTimeElasped() {
+        long timeDiffMillis = DateTime.now().getMillis() - createdOn.getMillis();
+        int mins = (int) (timeDiffMillis/60000);
+        if (mins <= 59)
+            return "posted "+mins+" minutes ago";
+        int hours = (mins/60);
+        if (hours < 24)
+            return "posted "+hours+ " hours ago";
+        int days = hours/24;
+        if (days < 7)
+            return "posted "+days+" days ago";
+
+        return "posted on "+ createdOn.toString("dd MMM yyyy");
+
     }
 }

@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private AuthCredential credential;
     private FirebaseAuth mAuth;
     private final AppCompatActivity activity = this;
+    private Boolean handleFacebookAccessTokenLock = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,20 +104,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
-        accessToken = token;
-        credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential).addOnCompleteListener(task ->  {
+        synchronized(this) {
+            if (!this.handleFacebookAccessTokenLock) {
+                this.handleFacebookAccessTokenLock = true;
+                accessToken = token;
+                credential = FacebookAuthProvider.getCredential(token.getToken());
+                mAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
 
-                // If sign in fails, display a message to the user. If sign in succeeds
-                // the auth state listener will be notified and logic to handle the
-                // signed in user can be handled in the listener.
-                if (!task.isSuccessful()) {
-                     Log.i("facebook", Arrays.toString(task.getException().getStackTrace()));
-                    Toast.makeText(activity, "Facebook Authentication failed", Toast.LENGTH_SHORT).show();
-                } else {
-                    processFirebaseAuthenticationToBackend();
-                }
-            });
+                    // If sign in fails, display a message to the user. If sign in succeeds
+                    // the auth state listener will be notified and logic to handle the
+                    // signed in user can be handled in the listener.
+                    if (!task.isSuccessful()) {
+                        Log.i("facebook", Arrays.toString(task.getException().getStackTrace()));
+                        Toast.makeText(activity, "Facebook Authentication failed", Toast.LENGTH_SHORT).show();
+                    } else {
+                        processFirebaseAuthenticationToBackend();
+                    }
+                });
+            }
+        }
     }
 
     private void processFirebaseAuthenticationToBackend() {
@@ -138,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
                 (JSONObject response) -> {
                     try {
                         User user = new User(response.getJSONObject(Constants.FBPROFILE_KEY));
-                        user.fcmToken = response.getJSONObject("userprofile").getString("fcm_token");
-                        user.firebaseId = response.getJSONObject("userprofile").getString("firebase_id");
+                        user.fcmToken = response.getJSONObject("userprofile").getString(Constants.FCM_TOKEN);
+                        user.firebaseId = response.getJSONObject("userprofile").getString(Constants.FIREBASE_ID_KEY);
                         user.uuid = response.getJSONObject("userprofile").getString(Constants.UUID_KEY);
                         SessionData.currentUser = user;
                         MyApplication.getInstance().saveCurrentUser(SessionData.currentUser);

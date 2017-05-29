@@ -107,7 +107,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
 
 
             Comment comment = comments.get(position);
-            holder.mTimestampView.setText("5 hours ago");
+            holder.mTimestampView.setText(comment.getTimeElasped());
             holder.mProfileNameView.setText(comment.user.name);
             holder.mCommentView.setText(comment.getComment());
             holder.mLikeView.setText(comment.likes + " Like");
@@ -317,7 +317,7 @@ public class CommentItemRecyclerViewAdapter extends RecyclerView.Adapter<Comment
             @Override
             public int compare(Comment a, Comment b) {
                 if (field == SORT_RECENT_FIRST)
-                    return a.uuid.compareTo(b.uuid);
+                    return (b.id - a.id);
                 else if (field == SORT_POPULAR_FIRST)
                     return  (b.likes + b.endorse + b.disLikes) - (a.likes + a.disLikes + a.endorse);
                 return 0;

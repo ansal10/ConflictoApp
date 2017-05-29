@@ -1,6 +1,7 @@
 package in.co.conflicto.conflictoapp.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 
 import in.co.conflicto.conflictoapp.R;
 import in.co.conflicto.conflictoapp.adapters.HomeTabsPagerAdapter;
@@ -119,7 +123,12 @@ public class HomeNavActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_fb_logout_id) {
+            LoginManager.getInstance().logOut();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                this.finishAndRemoveTask();
+            else this.finish();
+
             return true;
         }
 

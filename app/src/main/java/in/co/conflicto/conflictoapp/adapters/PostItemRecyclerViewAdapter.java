@@ -87,7 +87,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
         }
 
         Post post = posts.get(position);
-        holder.mPostTimestampView.setText("posted 2 mins ago");
+        holder.mPostTimestampView.setText(post.getTimeElasped());
         holder.mProfileNameView.setText(post.user.name);
         holder.mPostTitleView.setText(post.title);
         holder.mPostDescriptionView.setText(post.getDescription());
@@ -165,7 +165,7 @@ public class PostItemRecyclerViewAdapter extends RecyclerView.Adapter<PostItemRe
             PopupMenu popup = new PopupMenu(activity, holder.mPostOptionMenuView, Gravity.RIGHT);
             popup.getMenuInflater().inflate(R.menu.menu_post_actions, popup.getMenu());
             Menu menu = popup.getMenu();
-            if (post.user.uuid.equals(SessionData.currentUser.uuid)){
+            if (!post.user.uuid.equals(SessionData.currentUser.uuid)){
                 menu.removeItem(R.id.action_post_edit_id);
                 menu.removeItem(R.id.action_post_delete_id);
             }

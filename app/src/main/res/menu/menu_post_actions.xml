@@ -15,6 +15,6 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_post_expand_id"
-        android:title="Expand"
+        android:title="View More"
         app:showAsAction="never"/>
 </menu>

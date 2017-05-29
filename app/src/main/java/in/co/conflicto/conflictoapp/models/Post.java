@@ -3,6 +3,7 @@ package in.co.conflicto.conflictoapp.models;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,6 +34,8 @@ public class Post implements Serializable {
     public Integer reports ;
     public List<String> reactions;
     public Boolean expanded;
+    public Integer id;
+    public DateTime createdOn;
 
     public User user;
 
@@ -57,6 +60,8 @@ public class Post implements Serializable {
 
             this.tags = new ObjectMapper().readValue(obj.getString(Constants.TAGS_KEY), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
             this.reactions = new ObjectMapper().readValue(obj.getString(Constants.REACTIONS_KEY), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+            this.id = obj.getInt("id");
+            createdOn = new DateTime(obj.getString("created_on"));
 
 
         } catch (JSONException e) {
@@ -123,5 +128,21 @@ public class Post implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTimeElasped() {
+        long timeDiffMillis = DateTime.now().getMillis() - createdOn.getMillis();
+        int mins = (int) (timeDiffMillis/60000);
+        if (mins <= 59)
+            return "posted "+mins+" minutes ago";
+        int hours = (mins/60);
+        if (hours < 24)
+            return "posted "+hours+ " hours ago";
+        int days = hours/24;
+        if (days < 7)
+            return "posted "+days+" days ago";
+
+        return "posted on "+ createdOn.toString("dd MMM yyyy");
+
     }
 }
